@@ -12,10 +12,17 @@
         <a href="/">back</a>
         <h1><%= name %></h1>
         <p><%= description %></p>
-        <a class="block">blehhh</a>
+        <div id="topics">
+            <a class="block" href="/topic/<%= topics[0].id %>"><%= topics[0].name %></a>
+        </div>
     </div>
     <div id="footercontainer"></div>
     <script src="https://dev.hatch.lol/navbar/navbar.js"></script>
     <script src="https://dev.hatch.lol/footer/footer.js"></script>
+    <!-- <script>
+        .forEach((topic) => {
+            document.querySelector("topics").innerHTML += `<a class="block" href="/topic/${topic.id}">${topic.name}</a>`;
+        });
+    </script> -->
 </body>
 </html>

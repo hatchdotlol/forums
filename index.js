@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const { exit } = require("process");
 const sqlite = require("sqlite3");
 
 const app = express();
@@ -22,17 +23,25 @@ db.run(`CREATE TABLE IF NOT EXISTS categories (
   }
 });
 
-db.run("INSERT INTO categories (name, description) VALUES ('Announcements', 'Announcements from the Hatch Team.')", (err) => {
+db.run(`CREATE TABLE IF NOT EXISTS topics (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  author TEXT NOT NULL,
+  category INTEGER NOT NULL
+)`, (err) => {
   if (err) {
     console.error(err.message);
   }
 });
 
-db.run("INSERT INTO categories (name, description) VALUES ('Suggestions', 'Suggestions for feature additions to Hatch.')", (err) => {
-  if (err) {
-    console.error(err.message);
-  }
-});
+db.run("INSERT INTO topics (name, author, category) VALUES ('Hello, World!!', 'rayne', 1)", (err) => { if (err) { console.error(err.message); } });
+db.run("INSERT INTO topics (name, author, category) VALUES ('meow', 'rayne', 1)", (err) => { if (err) { console.error(err.message); } });
+
+db.run("INSERT INTO categories (name, description) VALUES ('Announcements', 'Announcements from the Hatch Team.')", (err) => { if (err) { console.error(err.message); } });
+db.run("INSERT INTO categories (name, description) VALUES ('Suggestions', 'Suggestions for feature additions to Hatch.')", (err) => { if (err) { console.error(err.message); } });
+db.run("INSERT INTO categories (name, description) VALUES ('Questions about Hatch', 'General questions about Hatch.')", (err) => { if (err) { console.error(err.message); } });
+db.run("INSERT INTO categories (name, description) VALUES ('Project Help', 'Need help with a project? Ask for help here.')", (err) => { if (err) { console.error(err.message); } });
+db.run("INSERT INTO categories (name, description) VALUES ('Bug Reports', 'Report bugs found on Hatch here.')", (err) => { if (err) { console.error(err.message); } });
 
 app.use(express.static(path.join(__dirname, "public")))
   .set("views", path.join(__dirname, "views"))
@@ -44,16 +53,14 @@ app.get("/", (req, res) => {
 
 app.get("/category/:category", (req, res) => {
   db.get("SELECT * FROM categories WHERE id = ?", [req.params.category], (err, row) => {
-    console.log(row);
-    res.render("category", {
-      name: row.name,
-      description: row.description
+    db.all("SELECT * FROM topics", (err, topics) => {
+      res.render("category", {
+        name: row.name,
+        description: row.description,
+        topics: topics
+      });
     });
   });
-});
-
-app.get("/api", (req, res) => {
-  res.json({"message": "hello world!!"});
 });
 
 app.listen(port, () => {
