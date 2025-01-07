@@ -12,11 +12,11 @@
     text-decoration: none;
 }
 
-.block a {
+#main a {
     color: var(--lightOrange);
     text-decoration: none;
 }
 
-.block a:hover {
+#main a:hover {
     text-decoration: underline;
 }

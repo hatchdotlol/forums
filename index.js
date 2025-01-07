@@ -12,9 +12,9 @@ const db = new sqlite.Database('./db.db', (err) => {
   }
 });
 
-db.run(`CREATE TABLE categories (
+db.run(`CREATE TABLE IF NOT EXISTS categories (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL
+  name TEXT NOT NULL,
   description TEXT NOT NULL
 )`, (err) => {
   if (err) {
@@ -40,6 +40,16 @@ app.use(express.static(path.join(__dirname, "public")))
 
 app.get("/", (req, res) => {
   res.render("index");
+});
+
+app.get("/category/:category", (req, res) => {
+  db.get("SELECT * FROM categories WHERE id = ?", [req.params.category], (err, row) => {
+    console.log(row);
+    res.render("category", {
+      name: row.name,
+      description: row.description
+    });
+  });
 });
 
 app.get("/api", (req, res) => {
