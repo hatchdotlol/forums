@@ -1,1 +1,22 @@
-/** Add styles here */
+#main {
+    color: #ffffff;
+}
+
+.block {
+    display: block;
+    background-color: var(--innerBlock);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    color: var(--univText);
+    text-decoration: none;
+}
+
+.block a {
+    color: var(--lightOrange);
+    text-decoration: none;
+}
+
+.block a:hover {
+    text-decoration: underline;
+}
