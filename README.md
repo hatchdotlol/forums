@@ -1,7 +1,6 @@
-# Node + Express Service Starter
+# hatch forums
+this is the repository for the backend and frontend of the hatch forums.
 
-This is a simple hello world express.js server.
-
-## Getting Started
-
-Previews should run automatically when starting a workspace. Run the `Show Web Preview` IDX command to see the preview.
+## routes
+- `/`: forums home page.
+- `/category/<category>`: category page. `<category>` is a unique ID applied to each forum category.
