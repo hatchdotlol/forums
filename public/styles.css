@@ -20,3 +20,29 @@
 #main a:hover {
     text-decoration: underline;
 }
+
+.post {
+    display: flex;
+    gap: 10px;
+}
+
+.post-content {
+    flex: auto;
+}
+
+.post-user-info {
+    width: 120px;
+}
+
+.post-pfp {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+}
+
+.post-op {
+    background-color: var(--lightOrange);
+    color: #000000;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+}
