@@ -19,7 +19,7 @@
                         <img class="post-pfp" src="https://api.hatch.lol/uploads/pfp/default.png">
                         <a class="post-user-name" href="https://dev.hatch.lol/user/?u=<%= posts[i].author %>"></a>
                         <% if (posts[i].author === topic.author) { %>
-                            <span class="post-tag">OP</span>
+                            <span class="post-tag" title="Original Poster">OP</span>
                         <% } %>
                         <div><%= topic.author === "rayne" ? "Hatch Team" : "Hatchling" %></div>
                     </div>
