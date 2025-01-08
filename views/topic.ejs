@@ -14,13 +14,14 @@
         <p>by <a href="https://dev.hatch.lol/user/?u=<%= topic.author %>">@<%= topic.author %></a></p>
         <div id="posts">
             <% for (let i = 0; i < posts.length; i++) { %>
-                <div class="block post" data-username="<%= posts[i].author %>">
+                <div class="block post" id="<%= posts[i].author %>">
                     <div class="post-user-info">
                         <img class="post-pfp" src="https://api.hatch.lol/uploads/pfp/default.png">
                         <a class="post-user-name" href="https://dev.hatch.lol/user/?u=<%= posts[i].author %>"></a>
                         <% if (posts[i].author === topic.author) { %>
-                            <span class="post-op">OP</span>
+                            <span class="post-tag">OP</span>
                         <% } %>
+                        <div><%= topic.author === "rayne" ? "Hatch Team" : "Hatchling" %></div>
                     </div>
                     <div class="post-content">
                         <%= posts[i].content %>

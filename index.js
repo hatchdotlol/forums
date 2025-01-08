@@ -5,7 +5,7 @@ const sqlite = require("sqlite3");
 
 const app = express();
 
-const port = parseInt(process.env.PORT) || process.argv[3] || 8080;
+const port = parseInt(process.env.PORT) || process.argv[3] || 3000;
 
 const db = new sqlite.Database('./db.db', (err) => {
   if (err) {

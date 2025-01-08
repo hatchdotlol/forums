@@ -40,9 +40,16 @@
     border-radius: 10px;
 }
 
-.post-op {
+.post-tag {
     background-color: var(--lightOrange);
     color: #000000;
     padding: 0.1rem 0.3rem;
     border-radius: 0.2rem;
+    display: inline-block;
+}
+
+.post-content {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--innerBlock2);
 }
