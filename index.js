@@ -1,7 +1,8 @@
 const express = require("express");
 const path = require("path");
-const { exit } = require("process");
 const sqlite = require("sqlite3");
+const bodyParser = require("body-parser");
+
 
 const app = express();
 
@@ -12,6 +13,9 @@ const db = new sqlite.Database('./db.db', (err) => {
     console.error(err.message);
   }
 });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 db.run(`CREATE TABLE IF NOT EXISTS categories (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -79,6 +83,14 @@ app.get("/category/:category", (req, res) => {
   });
 });
 
+app.get("/category/:category/new", (req, res) => {
+  db.get("SELECT * FROM categories WHERE id = ?", [req.params.category], (err, row) => {
+    res.render("new_topic", {
+      category: row
+    });
+  });
+});
+
 app.get("/topic/:topic", (req, res) => {
   db.get("SELECT * FROM topics WHERE id = ?", [req.params.topic], (err, row) => {
     db.all("SELECT * FROM posts WHERE topic = ?", [req.params.topic], (err, posts) => {
@@ -88,6 +100,21 @@ app.get("/topic/:topic", (req, res) => {
       });
     });
   });
+});
+
+app.post("/api/new/topic", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.header("Token")
+    }
+  }).then(fres => {
+    res.sendStatus(200);
+    if (fres.status === 200) {
+      fres.json().then(data => {
+        db.run("INSERT INTO topics (name, author, category) VALUES (?, ?, ?)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
+      });
+    }
+  })
 });
 
 app.listen(port, () => {

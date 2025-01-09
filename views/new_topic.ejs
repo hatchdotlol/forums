@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/style.css">
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/navbar/navbar.css">
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/footer/footer.css">
+    <meta id="get-category" content="<%= category.id %>">
+</head>
+<body>
+<div id="navarea"></div>
+<div id="main">
+    <a href="/category/<%= category.id %>">back</a>
+    <h1>New Topic</h1>
+    <p>In <%= category.name %>. <%= category.description %></p>
+    <div id="new_post" class="block post_form">
+        <input type="text" id="new_post_title" placeholder="Topic title" autocomplete="off">
+        <textarea id="new_post_content"></textarea>
+        <a class="button" id="new_post_submit" href="#">Post topic</a>
+    </div>
+</div>
+<div id="footercontainer"></div>
+<script src="https://dev.hatch.lol/navbar/navbar.js"></script>
+<script src="https://dev.hatch.lol/footer/footer.js"></script>
+<script src="/new_topic.js"></script>
+</body>
+</html>

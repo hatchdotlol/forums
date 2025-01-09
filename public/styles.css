@@ -7,7 +7,7 @@
     background-color: var(--innerBlock);
     border-radius: 10px;
     padding: 10px;
-    margin-bottom: 10px;
+    margin: 10px 0;
     color: var(--univText);
     text-decoration: none;
 }
@@ -48,8 +48,41 @@
     display: inline-block;
 }
 
-.post-content {
+.post-content, textarea, input {
     padding: 10px;
     border-radius: 10px;
     background-color: var(--innerBlock2);
+    border: none;
+    color: #ffffff;
+}
+
+input::placeholder {
+    color: #9f9f9f;
+}
+
+.button {
+    background-color: var(--lightOrange);
+    color: #000000 !important;
+    padding: 0.4rem 0.8rem;
+    border-radius: 10px;
+    width: fit-content;
+    display: block;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.post_form input {
+    width: calc(100% - 20px);
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.post_form textarea {
+    resize: vertical;
+    width: calc(100% - 20px);
+    height: 200px;
+    color: #ffffff;
+    outline: none;
+    font-family: inherit;
+    margin: 10px 0;
 }

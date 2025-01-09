@@ -12,6 +12,7 @@
         <a href="/">back</a>
         <h1><%= category.name %></h1>
         <p><%= category.description %></p>
+        <a class="button" href="/category/<%= category.id %>/new">New topic</a>
         <div id="topics">
             <% for (let i = 0; i < topics.length; i++) { %>
                 <a class="block" href="/topic/<%= topics[i].id %>"><%= topics[i].name %></a>
