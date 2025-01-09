@@ -21,7 +21,7 @@
                         <% if (posts[i].author === topic.author) { %>
                             <span class="post-tag" title="Original Poster">OP</span>
                         <% } %>
-                        <div><%= posts[i].author === "rayne" ? "Hatch Team" : "Hatchling" %></div>
+                        <div class="post-user-role"></div>
                     </div>
                     <div class="post-content">
                         <%= posts[i].content %>
