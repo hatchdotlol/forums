@@ -55,11 +55,6 @@ db.run("INSERT INTO categories (name, description) VALUES ('Questions about Hatc
 db.run("INSERT INTO categories (name, description) VALUES ('Project Help', 'Need help with a project? Ask for help here.')", (err) => { if (err) { console.error(err.message); } });
 db.run("INSERT INTO categories (name, description) VALUES ('Bug Reports', 'Report bugs found on Hatch here.')", (err) => { if (err) { console.error(err.message); } });
 
-db.run("INSERT INTO topics (name, author, category) VALUES ('Hello, World!!', 'rayne', 1)", (err) => { if (err) { console.error(err.message); } });
-db.run("INSERT INTO topics (name, author, category) VALUES ('meow', 'rayne', 3)", (err) => { if (err) { console.error(err.message); } });
-
-db.run("INSERT INTO posts (author, content, topic) VALUES ('rayne', 'hello world!!!!! ^w^', 1)", (err) => { if (err) { console.error(err.message); } });
-
 app.use(express.static(path.join(__dirname, "public")))
   .set("views", path.join(__dirname, "views"))
   .set("view engine", "ejs");
