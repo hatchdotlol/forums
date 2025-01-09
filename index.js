@@ -64,6 +64,10 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
 app.get("/category/:category", (req, res) => {
   db.get("SELECT * FROM categories WHERE id = ?", [req.params.category], (err, row) => {
     db.all("SELECT * FROM topics WHERE category = ?", [req.params.category], (err, topics) => {
