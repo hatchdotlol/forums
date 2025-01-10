@@ -105,9 +105,12 @@ app.post("/api/new/topic", (req, res) => {
       "Token": req.header("Token")
     }
   }).then(fres => {
-    res.sendStatus(200);
+    res.sendStatus(fres.status);
     if (fres.status === 200) {
       fres.json().then(data => {
+        if (req.body.category === 1 && !data.hatchTeam) {
+          return;
+        }
         db.get("SELECT COUNT(*) FROM topics", (err, count) => {
           if (err) { console.error(err.message); }
           db.run("INSERT INTO topics (name, author, category) VALUES (?, ?, ?)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
@@ -124,7 +127,7 @@ app.post("/api/new/post", (req, res) => {
       "Token": req.header("Token")
     }
   }).then(fres => {
-    res.sendStatus(200);
+    res.sendStatus(fres.status);
     if (fres.status === 200) {
       fres.json().then(data => {
         db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, req.body.topic], (err) => { if (err) { console.error(err.message); } });
