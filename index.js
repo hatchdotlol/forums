@@ -28,7 +28,7 @@ db.run(`CREATE TABLE IF NOT EXISTS categories (
 });
 
 db.run(`CREATE TABLE IF NOT EXISTS topics (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  id INTEGER NOT NULL,
   name TEXT NOT NULL,
   author TEXT NOT NULL,
   category INTEGER NOT NULL
@@ -106,7 +106,11 @@ app.post("/api/new/topic", (req, res) => {
     res.sendStatus(200);
     if (fres.status === 200) {
       fres.json().then(data => {
-        db.run("INSERT INTO topics (name, author, category) VALUES (?, ?, ?)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
+        db.get("SELECT COUNT(*) topics", (err, count) => {
+          if (err) { console.error(err.message); }
+          db.run("INSERT INTO topics (id, name, author, category) VALUES (?, ?, ?, ?)", [count.topics+1, req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
+          db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, count.topics+1], (err) => { if (err) { console.error(err.message); } });
+        });
       });
     }
   })
