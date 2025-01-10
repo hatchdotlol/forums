@@ -1,5 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#new_post_submit").addEventListener("click", () => {
+        if (document.querySelector("#new_post_content").value.length > 8000) {
+            alert("error: 8000-character content limit surpassed");
+            return;
+        }
+        if (document.querySelector("#new_post_content").value.trim().length < 1) {
+            alert("error: no content provided");
+            return;
+        }
+        if (document.querySelector("#new_post_title").value.length > 8000) {
+            alert("error: 100-character title limit surpassed");
+            return;
+        }
+        if (document.querySelector("#new_post_title").value.trim().length < 1) {
+            alert("error: no title provided");
+            return;
+        }
         fetch("/api/new/post", {
             method: "POST",
             headers: {

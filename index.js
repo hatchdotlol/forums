@@ -3,7 +3,6 @@ const path = require("path");
 const sqlite = require("sqlite3");
 const bodyParser = require("body-parser");
 
-
 const app = express();
 
 const port = parseInt(process.env.PORT) || process.argv[3] || 3000;
@@ -105,6 +104,10 @@ app.post("/api/new/topic", (req, res) => {
       "Token": req.header("Token")
     }
   }).then(fres => {
+    if (req.body.content.length > 8000 || req.body.content.trim().length < 1 || req.body.title.length > 100 || req.body.title.trim().length < 1) {
+      res.sendStatus(400);
+      return;
+    }
     res.sendStatus(fres.status);
     if (fres.status === 200) {
       fres.json().then(data => {
@@ -127,6 +130,10 @@ app.post("/api/new/post", (req, res) => {
       "Token": req.header("Token")
     }
   }).then(fres => {
+    if (req.body.content.length > 8000 || req.body.content.length < 1) {
+      res.sendStatus(400);
+      return;
+    }
     res.sendStatus(fres.status);
     if (fres.status === 200) {
       fres.json().then(data => {
