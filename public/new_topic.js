@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
         }).then(res => {
             if (res.status === 200) {
-                window.location.href = "..";
+                window.location.href = `/category/${document.querySelector("#get-category").content}`;
             } else {
                 alert(res.status + " " + res.statusText + "!!");
             }
