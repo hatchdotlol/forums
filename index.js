@@ -28,7 +28,7 @@ db.run(`CREATE TABLE IF NOT EXISTS categories (
 });
 
 db.run(`CREATE TABLE IF NOT EXISTS topics (
-  id INTEGER NOT NULL,
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   author TEXT NOT NULL,
   category INTEGER NOT NULL
@@ -49,11 +49,7 @@ db.run(`CREATE TABLE IF NOT EXISTS posts (
   }
 });
 
-db.run("INSERT INTO categories (name, description) VALUES ('Announcements', 'Announcements from the Hatch Team.')", (err) => { if (err) { console.error(err.message); } });
-db.run("INSERT INTO categories (name, description) VALUES ('Suggestions', 'Suggestions for feature additions to Hatch.')", (err) => { if (err) { console.error(err.message); } });
-db.run("INSERT INTO categories (name, description) VALUES ('Questions about Hatch', 'General questions about Hatch.')", (err) => { if (err) { console.error(err.message); } });
-db.run("INSERT INTO categories (name, description) VALUES ('Project Help', 'Need help with a project? Ask for help here.')", (err) => { if (err) { console.error(err.message); } });
-db.run("INSERT INTO categories (name, description) VALUES ('Bug Reports', 'Report bugs found on Hatch here.')", (err) => { if (err) { console.error(err.message); } });
+// db.run("INSERT INTO categories (name, description) VALUES ('Announcements', 'Announcements from the Hatch Team.')", (err) => { if (err) { console.error(err.message); } });
 
 app.use(express.static(path.join(__dirname, "public")))
   .set("views", path.join(__dirname, "views"))
@@ -106,10 +102,10 @@ app.post("/api/new/topic", (req, res) => {
     res.sendStatus(200);
     if (fres.status === 200) {
       fres.json().then(data => {
-        db.get("SELECT COUNT(*) topics", (err, count) => {
+        db.get("SELECT COUNT(*) FROM topics", (err, count) => {
           if (err) { console.error(err.message); }
-          db.run("INSERT INTO topics (id, name, author, category) VALUES (?, ?, ?, ?)", [count.topics+1, req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
-          db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, count.topics+1], (err) => { if (err) { console.error(err.message); } });
+          db.run("INSERT INTO topics (name, author, category) VALUES (?, ?, ?)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
+          db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, count["COUNT(*)"]+1], (err) => { if (err) { console.error(err.message); } });
         });
       });
     }
