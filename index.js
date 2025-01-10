@@ -31,7 +31,8 @@ db.run(`CREATE TABLE IF NOT EXISTS topics (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   author TEXT NOT NULL,
-  category INTEGER NOT NULL
+  category INTEGER NOT NULL,
+  pinned BOOLEAN NOT NULL
 )`, (err) => {
   if (err) {
     console.error(err.message);
@@ -50,6 +51,11 @@ db.run(`CREATE TABLE IF NOT EXISTS posts (
 });
 
 // db.run("INSERT INTO categories (name, description) VALUES ('Announcements', 'Announcements from the Hatch Team.')", (err) => { if (err) { console.error(err.message); } });
+// db.run("INSERT INTO categories (name, description) VALUES ('Suggestions', 'Suggestions for feature additions to Hatch.')", (err) => { if (err) { console.error(err.message); } });
+// db.run("INSERT INTO categories (name, description) VALUES ('Questions about Hatch', 'General questions about Hatch.')", (err) => { if (err) { console.error(err.message); } });
+// db.run("INSERT INTO categories (name, description) VALUES ('Project Help', 'Need help with a project? Ask for help here.')", (err) => { if (err) { console.error(err.message); } });
+// db.run("INSERT INTO categories (name, description) VALUES ('Bug Reports', 'Report bugs found on Hatch here.')", (err) => { if (err) { console.error(err.message); } });
+// db.run("INSERT INTO categories (name, description) VALUES ('Show and Tell', 'Show off your creations here!')", (err) => { if (err) { console.error(err.message); } });
 
 app.use(express.static(path.join(__dirname, "public")))
   .set("views", path.join(__dirname, "views"))
