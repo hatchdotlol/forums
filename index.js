@@ -32,7 +32,7 @@ db.run(`CREATE TABLE IF NOT EXISTS topics (
   name TEXT NOT NULL,
   author TEXT NOT NULL,
   category INTEGER NOT NULL,
-  pinned BOOLEAN NOT NULL
+  pinned BOOLEAN
 )`, (err) => {
   if (err) {
     console.error(err.message);

@@ -14,8 +14,20 @@
         <p><%= category.description %></p>
         <a class="button" href="/category/<%= category.id %>/new">New topic</a>
         <div id="topics">
-            <% for (let i = topics.length-1; i >= 0; i--) { %>
-                <a class="block" href="/topic/<%= topics[i].id %>"><%= topics[i].name %></a>
+            <% let pinnedlist = []; %>
+            <% let topiclist = []; %>
+            <% for (let i = 0; i < topics.length; i++) { %>
+                <% if (topics[i].pinned === "true") { %>
+                    <% pinnedlist.push(topics[i]) %>
+                <% } else { %>
+                        <% topiclist.unshift(topics[i]) %>
+                <%} %>
+            <% } %>
+            <% for (let i = 0; i < pinnedlist.length; i++) { %>
+                <a class="block" href="/topic/<%= pinnedlist[i].id %>"><%= pinnedlist[i].name %></a>
+            <% } %>
+            <% for (let i = 0; i < topiclist.length; i++) { %>
+                <a class="block" href="/topic/<%= topiclist[i].id %>"><%= topiclist[i].name %></a>
             <% } %>
         </div>
     </div>
