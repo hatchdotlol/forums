@@ -77,6 +77,10 @@ input::placeholder {
     font-size: inherit;
 }
 
+#new_post_title {
+    margin-bottom: 10px;
+}
+
 .post_form textarea {
     resize: vertical;
     width: calc(100% - 20px);
@@ -84,5 +88,5 @@ input::placeholder {
     color: #ffffff;
     outline: none;
     font-family: inherit;
-    margin: 10px 0;
+    margin-bottom: 10px;
 }

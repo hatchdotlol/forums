@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/style.css">
     <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/navbar/navbar.css">
     <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/footer/footer.css">
+    <meta id="get-topic" content="<%= topic.id %>">
 </head>
 <body>
     <div id="navarea"></div>
@@ -29,10 +30,15 @@
                 </div>
             <% } %>
         </div>
+        <div id="new_post" class="block post_form">
+            <textarea id="new_post_content"></textarea>
+            <a class="button" id="new_post_submit" href="#">Post</a>
+        </div>
     </div>
     <div id="footercontainer"></div>
     <script src="https://dev.hatch.lol/navbar/navbar.js"></script>
     <script src="https://dev.hatch.lol/footer/footer.js"></script>
-    <script src="/posts-user-render.js"></script>
+    <script src="/topic.js"></script>
+    <script src="/new_post.js"></script>
 </body>
 </html>

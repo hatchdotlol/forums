@@ -18,9 +18,9 @@
             <% let topiclist = []; %>
             <% for (let i = 0; i < topics.length; i++) { %>
                 <% if (topics[i].pinned === "true") { %>
-                    <% pinnedlist.push(topics[i]) %>
+                    <% pinnedlist.push(topics[i]); %>
                 <% } else { %>
-                        <% topiclist.unshift(topics[i]) %>
+                        <% topiclist.unshift(topics[i]); %>
                 <%} %>
             <% } %>
             <% for (let i = 0; i < pinnedlist.length; i++) { %>

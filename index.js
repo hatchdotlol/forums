@@ -118,6 +118,21 @@ app.post("/api/new/topic", (req, res) => {
   })
 });
 
+app.post("/api/new/post", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.header("Token")
+    }
+  }).then(fres => {
+    res.sendStatus(200);
+    if (fres.status === 200) {
+      fres.json().then(data => {
+        db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, req.body.topic], (err) => { if (err) { console.error(err.message); } });
+      });
+    }
+  })
+});
+
 app.listen(port, () => {
   console.log(`listening on http://localhost:${port}`);
 })
