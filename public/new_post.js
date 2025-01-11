@@ -8,14 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("error: no content provided");
             return;
         }
-        if (document.querySelector("#new_post_title").value.length > 8000) {
-            alert("error: 100-character title limit surpassed");
-            return;
-        }
-        if (document.querySelector("#new_post_title").value.trim().length < 1) {
-            alert("error: no title provided");
-            return;
-        }
         fetch("/api/new/post", {
             method: "POST",
             headers: {
