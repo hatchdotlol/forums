@@ -2,5 +2,9 @@
 this is the repository for the backend and frontend of the hatch forums.
 
 ## routes
-- `/`: forums home page.
-- `/category/<category>`: category page. `<category>` is a unique ID applied to each forum category.
+- GET `/`: forums home page.
+- POST `api/new/topic`: route create a new topic. user token should be in the `Token` header. body should contain `title`, `content` and `category` (as an ID) attributes.
+- POST `api/new/post`: route create a new topic. user token should be in the `Token` header. body should contain `content` and `topic` (as an ID) attributes.
+- GET `/category/<category>`: category page. `<category>` is a unique ID applied to each forum category.
+- GET `/topic/<topic>`: topic page. `<topic>` is a unique ID applied to each topic in the forums.
+  
