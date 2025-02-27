@@ -27,8 +27,14 @@
                         <% topiclist.unshift(topics[i]); %>
                 <%} %>
             <% } %>
+            <% if (pinnedlist.length > 0) { %>
+                <h2>Pinned topics</h2>
+            <% } %>
             <% for (let i = 0; i < pinnedlist.length; i++) { %>
                 <a class="block" href="/topic/<%= pinnedlist[i].id %>"><%= pinnedlist[i].name %></a>
+            <% } %>
+            <% if (topiclist > 0) { %>
+                <h2>Topics</h2>
             <% } %>
             <% for (let i = 0; i < topiclist.length; i++) { %>
                 <a class="block" href="/topic/<%= topiclist[i].id %>"><%= topiclist[i].name %></a>
