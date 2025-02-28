@@ -16,7 +16,8 @@
     <div id="main">
         <a href="/category/<%= topic.category %>/">back</a>
         <h1><%= topic.name %></h1>
-        <p>by <a href="https://dev.hatch.lol/user/?u=<%= topic.author %>">@<%= topic.author %></a></p>
+        <p>by <a href="https://dev.hatch.lol/user/?u=<%= topic.author %>"><%= topic.author %></a></p>
+        <a class="button" id="pin-topic-button"><%= topic.pinned === 1 ? "Unpin" : "Pin" %></a>
         <div id="posts">
             <% for (let i = 0; i < posts.length; i++) { %>
                 <div class="block post" id="<%= posts[i].author %>">

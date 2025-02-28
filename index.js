@@ -32,7 +32,7 @@ db.run(`CREATE TABLE IF NOT EXISTS topics (
   name TEXT NOT NULL,
   author TEXT NOT NULL,
   category INTEGER NOT NULL,
-  pinned BOOLEAN
+  pinned BOOLEAN NOT NULL
 )`, (err) => {
   if (err) {
     console.error(err.message);
@@ -117,12 +117,12 @@ app.post("/api/new/topic", (req, res) => {
         }
         db.get("SELECT COUNT(*) FROM topics", (err, count) => {
           if (err) { console.error(err.message); }
-          db.run("INSERT INTO topics (name, author, category) VALUES (?, ?, ?)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
+          db.run("INSERT INTO topics (name, author, category, pinned) VALUES (?, ?, ?, false)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
           db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, count["COUNT(*)"]+1], (err) => { if (err) { console.error(err.message); } });
         });
       });
     }
-  })
+  });
 });
 
 app.post("/api/new/post", (req, res) => {
@@ -141,9 +141,43 @@ app.post("/api/new/post", (req, res) => {
         db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, req.body.topic], (err) => { if (err) { console.error(err.message); } });
       });
     }
-  })
+  });
+});
+
+app.post("/api/pin/topic", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.header("Token")
+    }
+  }).then(fres => {
+    if (fres.status === 200) {
+      fres.json().then(data => {
+        if (!data.hatchTeam) {
+          res.sendStatus(403);
+          return;
+        }
+        db.get("SELECT * FROM topics WHERE id = ?", [req.body.id], (err, topic) => {
+          if (err) {
+            res.sendStatus(500);
+            console.error(err.message);
+            return;
+          }
+          db.run("UPDATE topics SET pinned = ? WHERE id = ?", [!topic.pinned, req.body.id], (err) => {
+            if (err) {
+              res.sendStatus(500);
+              console.error(err.message);
+              return;
+            }
+          });
+          res.sendStatus(200);
+        });
+      });
+    } else {
+      res.sendStatus(fres.status);
+    }
+  });
 });
 
 app.listen(port, () => {
   console.log(`listening on http://localhost:${port}`);
-})
+});

@@ -21,10 +21,10 @@
             <% let pinnedlist = []; %>
             <% let topiclist = []; %>
             <% for (let i = 0; i < topics.length; i++) { %>
-                <% if (topics[i].pinned === "true") { %>
+                <% if (topics[i].pinned === 1) { %>
                     <% pinnedlist.push(topics[i]); %>
                 <% } else { %>
-                        <% topiclist.unshift(topics[i]); %>
+                    <% topiclist.unshift(topics[i]); %>
                 <%} %>
             <% } %>
             <% if (pinnedlist.length > 0) { %>
@@ -33,7 +33,7 @@
             <% for (let i = 0; i < pinnedlist.length; i++) { %>
                 <a class="block" href="/topic/<%= pinnedlist[i].id %>"><%= pinnedlist[i].name %></a>
             <% } %>
-            <% if (topiclist > 0) { %>
+            <% if (topiclist.length > 0) { %>
                 <h2>Topics</h2>
             <% } %>
             <% for (let i = 0; i < topiclist.length; i++) { %>
