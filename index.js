@@ -167,8 +167,8 @@ app.post("/api/new/post", (req, res) => {
 });
 
 app.post("/api/new/reaction", (req, res) => {
-  let reaction = parseInt(req.body.reaction);
-  if (reaction < 0 || reaction > 5) {
+  let post_reaction = parseInt(req.body.reaction);
+  if (post_reaction < 0 || post_reaction > 5) {
     res.sendStatus(400);
     return;
   }
@@ -179,8 +179,19 @@ app.post("/api/new/reaction", (req, res) => {
   }).then(fres => {
     if (fres.status === 200) {
       fres.json().then(data => {
-        db.run("INSERT INTO reactions (author, type, post) VALUES (?, ?, ?)", [data.name, reaction, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } })
+        db.get("SELECT * FROM reactions WHERE author = ? AND type = ?", [data.name, req.body.reaction], (err, reaction) => {
+          if (err) {
+            res.sendStatus(500);
+            console.error(err.message);
+            return;
+          }
+          if (reaction) {
+            db.run("DELETE FROM reactions WHERE author = ? AND type = ?", [data.name, req.body.reaction], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
+          } else {
+            db.run("INSERT INTO reactions (author, type, post) VALUES (?, ?, ?)", [data.name, post_reaction, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } })
+          }
           res.sendStatus(200);
+        });
       });
     } else {
       res.sendStatus(fres.status);

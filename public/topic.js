@@ -24,10 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     "reaction": element.dataset.reaction,
                     "post": element.dataset.post
                 })
-            }).then(res => {
-                if (res.status === 200) {
-                    element.querySelector(".post-reaction-counter").innerText = (element.querySelector(".post-reaction-counter").innerText !== "" ? parseInt(element.querySelector(".post-reaction-counter").innerText) : 0) + 1;
-                }
             });
         });
     });
