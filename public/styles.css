@@ -29,6 +29,7 @@
 .post-content {
     flex: auto;
     word-break: break-word;
+    width: calc(100% - 150px);
 }
 
 .post-user-info {
