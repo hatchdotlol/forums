@@ -3,6 +3,7 @@ const path = require("path");
 const sqlite = require("sqlite3");
 const bodyParser = require("body-parser");
 const requestIP = require("request-ip");
+const { log } = require("console");
 
 const app = express();
 
@@ -50,6 +51,16 @@ db.run(`CREATE TABLE IF NOT EXISTS posts (
   }
 });
 
+db.run(`CREATE TABLE IF NOT EXISTS reactions (
+  author TEXT NOT NULL,
+  type INTEGER NOT NULL,
+  post INTEGER NOT NULL
+)`, (err) => {
+  if (err) {
+    console.error(err.message);
+  }
+});
+
 // db.run("INSERT INTO categories (name, description) VALUES ('Announcements', 'Announcements from the Hatch Team.')", (err) => { if (err) { console.error(err.message); } });
 // db.run("INSERT INTO categories (name, description) VALUES ('Suggestions', 'Suggestions for feature additions to Hatch.')", (err) => { if (err) { console.error(err.message); } });
 // db.run("INSERT INTO categories (name, description) VALUES ('Questions about Hatch', 'General questions about Hatch.')", (err) => { if (err) { console.error(err.message); } });
@@ -90,10 +101,21 @@ app.get("/category/:category/new", (req, res) => {
 
 app.get("/topic/:topic", (req, res) => {
   db.get("SELECT * FROM topics WHERE id = ?", [req.params.topic], (err, row) => {
-    db.all("SELECT * FROM posts WHERE topic = ?", [req.params.topic], (err, posts) => {
+    db.all("SELECT * FROM posts WHERE topic = ?", [req.params.topic], async (err, posts) => {
+      let get_reactions = (post) => new Promise((resolve) => {
+        db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
+          resolve(reactions);
+        });
+      });
+
+      let post_reactions = await Promise.all(posts.map(post => get_reactions(post)));
+
+      console.log(post_reactions);
+
       res.render("topic", {
         topic: row,
-        posts: posts
+        posts: posts,
+        reactions: post_reactions
       });
     });
   });
@@ -140,6 +162,28 @@ app.post("/api/new/post", (req, res) => {
       fres.json().then(data => {
         db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, req.body.topic], (err) => { if (err) { console.error(err.message); } });
       });
+    }
+  });
+});
+
+app.post("/api/new/reaction", (req, res) => {
+  let reaction = parseInt(req.body.reaction);
+  if (reaction < 0 || reaction > 5) {
+    res.sendStatus(400);
+    return;
+  }
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.header("Token")
+    }
+  }).then(fres => {
+    if (fres.status === 200) {
+      fres.json().then(data => {
+        db.run("INSERT INTO reactions (author, type, post) VALUES (?, ?, ?)", [data.name, reaction, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } })
+          res.sendStatus(200);
+      });
+    } else {
+      res.sendStatus(fres.status);
     }
   });
 });

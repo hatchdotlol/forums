@@ -26,10 +26,17 @@
     gap: 10px;
 }
 
-.post-content {
+.post-content-container {
     flex: auto;
     word-break: break-word;
     width: calc(100% - 150px);
+}
+
+.post-reactions {
+    float: right;
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 .post-user-info {
@@ -50,7 +57,7 @@
     display: inline-block;
 }
 
-.post-content, textarea, input {
+.post-content-container, textarea, input {
     padding: 10px;
     border-radius: 10px;
     background-color: var(--innerBlock2);

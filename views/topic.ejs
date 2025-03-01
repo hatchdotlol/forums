@@ -29,10 +29,22 @@
                         <% } %>
                         <div class="post-user-role"></div>
                     </div>
-                    <div class="post-content">
-                        <%=
-                            posts[i].content
-                        %>
+                    <div class="post-content-container">
+                        <div class="post-content">
+                            <%=
+                                posts[i].content
+                            %>
+                        </div>
+                        <div class="post-reactions">
+                            <% let post_reactions = [ [], [], [], [], [] ]; %>
+                            <% for (let j = 0; j < reactions[i].length; j++) { %>
+                                <% post_reactions[reactions[i][j].type].push(reactions[i][j].author); %>
+                            <% } %>
+
+                            <% for (let j = 0; j < 5; j++) { %>
+                                <a class="button post-reaction-button" data-post="<%= posts[i].id %>" data-reaction="<%= j %>" title="<%= post_reactions[j].join(", ") %>"><%= ["🎉", "👍", "👎", "❓", "️‍🔥"][j] %><%= post_reactions[j].length > 0 ? ` ${post_reactions[j].length}`: "" %>%></a>
+                            <% } %>
+                        </div>
                     </div>
                 </div>
             <% } %>
