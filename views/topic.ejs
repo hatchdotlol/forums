@@ -20,7 +20,7 @@
         <a class="button" id="pin-topic-button"><%= topic.pinned === 1 ? "Unpin" : "Pin" %></a>
         <div id="posts">
             <% for (let i = 0; i < posts.length; i++) { %>
-                <div class="block post" id="<%= posts[i].author %>">
+                <div class="block post" id="<%= posts[i].id %>" data-author="<%= posts[i].author %>">
                     <div class="post-user-info">
                         <img class="post-pfp" src="https://api.hatch.lol/uploads/pfp/default.png">
                         <a class="post-user-name" href="https://dev.hatch.lol/user/?u=<%= posts[i].author %>"></a>
