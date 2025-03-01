@@ -41,6 +41,8 @@
 
 .post-reactions a.button {
     user-select: none;
+    background-color: transparent;
+    color: var(--univText) !important;
 }
 
 .post-user-info {
