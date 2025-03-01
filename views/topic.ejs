@@ -42,7 +42,7 @@
                             <% } %>
 
                             <% for (let j = 0; j < 5; j++) { %>
-                                <a class="button post-reaction-button" data-post="<%= posts[i].id %>" data-reaction="<%= j %>" title="<%= post_reactions[j].join(", ") %>"><%= ["🎉", "👍", "👎", "❓", "️‍🔥"][j] %><%= post_reactions[j].length > 0 ? ` ${post_reactions[j].length}`: "" %>%></a>
+                                <a class="button post-reaction-button" data-post="<%= posts[i].id %>" data-reaction="<%= j %>" title="<%= post_reactions[j].join(", ") %>"><%= ["🎉", "👍", "👎", "❓", "️‍🔥"][j] %> <span class="post-reaction-counter"><%= post_reactions[j].length > 0 ? post_reactions[j].length : "" %></span></a>
                             <% } %>
                         </div>
                     </div>

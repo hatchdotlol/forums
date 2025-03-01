@@ -39,6 +39,10 @@
     gap: 10px;
 }
 
+.post-reactions a.button {
+    user-select: none;
+}
+
 .post-user-info {
     width: 120px;
 }
