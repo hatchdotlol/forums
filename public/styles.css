@@ -28,6 +28,7 @@
 
 .post-content {
     flex: auto;
+    word-break: break-word;
 }
 
 .post-user-info {
