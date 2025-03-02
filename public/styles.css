@@ -40,7 +40,7 @@
 
 .post-reactions a.button {
     user-select: none;
-    background-color: transparent;
+    background-color: var(--innerBlock);
     color: var(--univText) !important;
     text-wrap: nowrap;
     width: calc(100% - 0.8rem);
