@@ -32,17 +32,13 @@
     width: calc(100% - 150px);
 }
 
-.post-reactions {
-    float: right;
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
-}
-
 .post-reactions a.button {
     user-select: none;
     background-color: transparent;
     color: var(--univText) !important;
+    text-wrap: nowrap;
+    width: calc(100% - 0.8rem);
+    padding: 0.4rem;
 }
 
 .post-user-info {
