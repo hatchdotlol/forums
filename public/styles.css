@@ -25,6 +25,11 @@
     margin-bottom: 10px;
 }
 
+.post-date {
+    opacity: 0.6;
+    font-style: italic;
+}
+
 .post-stuff {
     display: flex;
     gap: 10px;

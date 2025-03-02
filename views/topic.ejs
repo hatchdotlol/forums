@@ -21,7 +21,8 @@
         <div id="posts">
             <% for (let i = 0; i < posts.length; i++) { %>
                 <div class="block post" id="<%= posts[i].id %>" data-author="<%= posts[i].author %>">
-                    <div class="post-header">#<%= i+1 %></div>
+                    <% let date = new Date(posts[i].timestamp); %>
+                    <div class="post-header">#<%= i+1 %> <span class="post-date"><%= ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date.getMonth()] %> <%= date.getDate() %> <%= date.getFullYear() %> <%= date.getHours() %>:<%= date.getMinutes().toString().length === 1 ? "0" : "" %><%= date.getMinutes() %>:<%= date.getSeconds().toString().length === 1 ? "0" : "" %><%= date.getSeconds() %></span></div>
                     <div class="post-stuff">
                         <section>
                             <div class="post-user-info">

@@ -44,7 +44,8 @@ db.run(`CREATE TABLE IF NOT EXISTS posts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   author TEXT NOT NULL,
   content TEXT,
-  topic INTEGER NOT NULL
+  topic INTEGER NOT NULL,
+  timestamp INTEGER NOT NULL
 )`, (err) => {
   if (err) {
     console.error(err.message);
@@ -110,8 +111,6 @@ app.get("/topic/:topic", (req, res) => {
 
       let post_reactions = await Promise.all(posts.map(post => get_reactions(post)));
 
-      console.log(post_reactions);
-
       res.render("topic", {
         topic: row,
         posts: posts,
@@ -160,7 +159,7 @@ app.post("/api/new/post", (req, res) => {
     res.sendStatus(fres.status);
     if (fres.status === 200) {
       fres.json().then(data => {
-        db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, req.body.topic], (err) => { if (err) { console.error(err.message); } });
+        db.run("INSERT INTO posts (author, content, topic, timestamp) VALUES (?, ?, ?, ?)", [data.name, req.body.content, req.body.topic, Date.now()], (err) => { if (err) { console.error(err.message); } });
       });
     }
   });
