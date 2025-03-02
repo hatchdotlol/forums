@@ -30,6 +30,11 @@
     font-style: italic;
 }
 
+.forum-version {
+    font-style: italic;
+    font-size: 1rem;
+}
+
 .post-stuff {
     display: flex;
     gap: 10px;

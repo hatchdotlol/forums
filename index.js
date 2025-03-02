@@ -1,3 +1,5 @@
+const version = "2.0.0";
+
 const express = require("express");
 const path = require("path");
 const sqlite = require("sqlite3");
@@ -74,7 +76,9 @@ app.use(express.static(path.join(__dirname, "public")))
   .set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("index", {
+    version: version
+  });
 });
 
 app.get("/login", (req, res) => {
