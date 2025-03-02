@@ -32,6 +32,12 @@
     width: calc(100% - 150px);
 }
 
+.post-reactions {
+    height: fit-content;
+    position: sticky;
+    top: 10px;
+}
+
 .post-reactions a.button {
     user-select: none;
     background-color: transparent;
@@ -43,6 +49,9 @@
 
 .post-user-info {
     width: 120px;
+    height: fit-content;
+    position: sticky;
+    top: 10px;
 }
 
 .post-pfp {
