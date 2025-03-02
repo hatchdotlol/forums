@@ -21,7 +21,11 @@
     text-decoration: underline;
 }
 
-.post {
+.post-header {
+    margin-bottom: 10px;
+}
+
+.post-stuff {
     display: flex;
     gap: 10px;
 }
