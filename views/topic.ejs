@@ -33,9 +33,14 @@
                     </section>
                     <div class="post-content-container">
                         <div class="post-content">
-                            <%=
-                                posts[i].content
-                            %>
+                            <% if (posts[i].content.includes("\n")) { %>
+                                <% let paragraphs = posts[i].content.split(/\r?\n/) %>
+                                <% for (let j = 0; j < paragraphs.length; j++) { %>
+                                    <%= paragraphs[j] %><br>
+                                <% } %>
+                            <% } else { %>
+                                <%= posts[i].content %>
+                            <% } %> 
                         </div>
                     </div>
                     <section>
