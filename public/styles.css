@@ -47,6 +47,10 @@
     padding: 0.4rem;
 }
 
+.post-reactions a.button:hover {
+    filter: brightness(1.3);
+}
+
 .post-user-info {
     width: 120px;
     height: fit-content;
