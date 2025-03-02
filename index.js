@@ -124,6 +124,10 @@ app.get("/topic/:topic", (req, res) => {
   });
 });
 
+app.get("/*", (req, res) => {
+  res.render("404");
+});
+
 app.post("/api/new/topic", (req, res) => {
   fetch("https://api.hatch.lol/auth/me", {
     headers: {
