@@ -141,13 +141,19 @@ app.post("/api/new/topic", (req, res) => {
     res.sendStatus(fres.status);
     if (fres.status === 200) {
       fres.json().then(data => {
-        if (req.body.category === 1 && !data.hatchTeam) {
+        if (req.body.category === "1" && !data.hatchTeam) {
           return;
         }
         db.get("SELECT COUNT(*) FROM topics", (err, count) => {
           if (err) { console.error(err.message); }
+
+          let content = req.body.content;
+          if (req.body.category === "5") {
+            content = `User agent: ${req.headers["user-agent"]}\n\n${req.body.content}`;
+          }
+
           db.run("INSERT INTO topics (name, author, category, pinned) VALUES (?, ?, ?, false)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
-          db.run("INSERT INTO posts (author, content, topic) VALUES (?, ?, ?)", [data.name, req.body.content, count["COUNT(*)"]+1], (err) => { if (err) { console.error(err.message); } });
+          db.run("INSERT INTO posts (author, content, topic, timestamp) VALUES (?, ?, ?, ?)", [data.name, content, count["COUNT(*)"]+1, Date.now()], (err) => { if (err) { console.error(err.message); } });
         });
       });
     }
