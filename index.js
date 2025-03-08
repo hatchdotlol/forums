@@ -4,14 +4,12 @@ const express = require("express");
 const path = require("path");
 const sqlite = require("sqlite3");
 const bodyParser = require("body-parser");
-const requestIP = require("request-ip");
-const { log } = require("console");
 
 const app = express();
 
 const port = parseInt(process.env.PORT) || process.argv[3] || 8000;
 
-const db = new sqlite.Database('./db.db', (err) => {
+const db = new sqlite.Database("./db.db", (err) => {
   if (err) {
     console.error(err.message);
   }
