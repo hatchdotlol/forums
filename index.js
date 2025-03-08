@@ -103,21 +103,33 @@ app.get("/category/:category/new", (req, res) => {
 });
 
 app.get("/topic/:topic", (req, res) => {
-  db.get("SELECT * FROM topics WHERE id = ?", [req.params.topic], (err, row) => {
+  db.get("SELECT * FROM topics WHERE id = ?", [req.params.topic], (err, topic) => {
     db.all("SELECT * FROM posts WHERE topic = ?", [req.params.topic], async (err, posts) => {
       let get_reactions = (post) => new Promise((resolve) => {
         db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
           resolve(reactions);
         });
       });
-
       let post_reactions = await Promise.all(posts.map(post => get_reactions(post)));
 
-      res.render("topic", {
-        topic: row,
-        posts: posts,
-        reactions: post_reactions
+      let get_post_counts = (post) => new Promise((resolve) => {
+        db.get("SELECT COUNT(*) FROM posts WHERE author = ?", [post.author], (err, count) => {
+          if (!err) {
+            resolve(count["COUNT(*)"]);
+          }
+        });
       });
+      let post_count = await Promise.all(posts.map(post => get_post_counts(post)));
+
+      console.log(post_count);
+
+      res.render("topic", {
+        topic: topic,
+        posts: posts,
+        reactions: post_reactions,
+        post_count: post_count
+      });
+
     });
   });
 });
