@@ -202,14 +202,14 @@ app.post("/api/new/reaction", (req, res) => {
   }).then(fres => {
     if (fres.status === 200) {
       fres.json().then(data => {
-        db.get("SELECT * FROM reactions WHERE author = ? AND type = ?", [data.name, req.body.reaction], (err, reaction) => {
+        db.get("SELECT * FROM reactions WHERE author = ? AND type = ? AND post = ?", [data.name, req.body.reaction, req.body.post], (err, reaction) => {
           if (err) {
             res.sendStatus(500);
             console.error(err.message);
             return;
           }
           if (reaction) {
-            db.run("DELETE FROM reactions WHERE author = ? AND type = ?", [data.name, req.body.reaction], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
+            db.run("DELETE FROM reactions WHERE author = ? AND type = ? AND post = ?", [data.name, req.body.reaction, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
           } else {
             db.run("INSERT INTO reactions (author, type, post) VALUES (?, ?, ?)", [data.name, post_reaction, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } })
           }
