@@ -1,4 +1,4 @@
-const version = "2.0.0";
+const version = "2.0.1";
 
 const express = require("express");
 const path = require("path");
