@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("error: no content provided");
             return;
         }
-        if (document.querySelector("#new_post_title").value.length > 8000) {
+        if (document.querySelector("#new_post_title").value.length > 100) {
             alert("error: 100-character title limit surpassed");
             return;
         }
