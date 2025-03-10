@@ -85,6 +85,9 @@ app.get("/login", (req, res) => {
 
 app.get("/category/:category", (req, res) => {
   db.get("SELECT * FROM categories WHERE id = ?", [req.params.category], (err, row) => {
+    if (row === undefined) {
+      res.status(404).render("404");
+    }
     db.all("SELECT * FROM topics WHERE category = ?", [req.params.category], (err, topics) => {
       res.render("category", {
         category: row,
@@ -96,6 +99,9 @@ app.get("/category/:category", (req, res) => {
 
 app.get("/category/:category/new", (req, res) => {
   db.get("SELECT * FROM categories WHERE id = ?", [req.params.category], (err, row) => {
+    if (row === undefined) {
+      res.status(404).render("404");
+    }
     res.render("new_topic", {
       category: row
     });
@@ -104,6 +110,9 @@ app.get("/category/:category/new", (req, res) => {
 
 app.get("/topic/:topic", (req, res) => {
   db.get("SELECT * FROM topics WHERE id = ?", [req.params.topic], (err, topic) => {
+    if (topic === undefined) {
+      res.status(404).render("404");
+    }
     db.all("SELECT * FROM posts WHERE topic = ?", [req.params.topic], async (err, posts) => {
       let get_reactions = (post) => new Promise((resolve) => {
         db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
@@ -135,7 +144,7 @@ app.get("/topic/:topic", (req, res) => {
 });
 
 app.get("/*", (req, res) => {
-  res.render("404");
+  res.status(404).render("404");
 });
 
 app.post("/api/new/topic", (req, res) => {
