@@ -130,8 +130,6 @@ app.get("/topic/:topic", (req, res) => {
       });
       let post_count = await Promise.all(posts.map(post => get_post_counts(post)));
 
-      console.log(post_count);
-
       res.render("topic", {
         topic: topic,
         posts: posts,
