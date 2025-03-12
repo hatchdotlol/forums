@@ -62,12 +62,23 @@ db.run(`CREATE TABLE IF NOT EXISTS reactions (
   }
 });
 
+db.run(`CREATE TABLE IF NOT EXISTS reports (
+  author TEXT NOT NULL,
+  reason TEXT NOT NULL,
+  post INTEGER NOT NULL
+)`, (err) => {
+  if (err) {
+    console.error(err.message);
+  }
+});
+
 // db.run("INSERT INTO categories (name, description) VALUES ('Announcements', 'Announcements from the Hatch Team.')", (err) => { if (err) { console.error(err.message); } });
 // db.run("INSERT INTO categories (name, description) VALUES ('Suggestions', 'Suggestions for feature additions to Hatch.')", (err) => { if (err) { console.error(err.message); } });
 // db.run("INSERT INTO categories (name, description) VALUES ('Questions about Hatch', 'General questions about Hatch.')", (err) => { if (err) { console.error(err.message); } });
 // db.run("INSERT INTO categories (name, description) VALUES ('Project Help', 'Need help with a project? Ask for help here.')", (err) => { if (err) { console.error(err.message); } });
 // db.run("INSERT INTO categories (name, description) VALUES ('Bug Reports', 'Report bugs found on Hatch here.')", (err) => { if (err) { console.error(err.message); } });
 // db.run("INSERT INTO categories (name, description) VALUES ('Show and Tell', 'Show off your creations here!')", (err) => { if (err) { console.error(err.message); } });
+// db.run("INSERT INTO categories (name, description) VALUES ('Garbage Dump', 'Where posts go when they die')", (err) => { if (err) { console.error(err.message); } });
 
 app.use(express.static(path.join(__dirname, "public")))
   .set("views", path.join(__dirname, "views"))
@@ -84,6 +95,10 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/category/:category", (req, res) => {
+  if (req.params.category === "7") {
+    res.status(404).render("404");
+    return;
+  }
   db.get("SELECT * FROM categories WHERE id = ?", [req.params.category], (err, row) => {
     if (row === undefined) {
       res.status(404).render("404");
@@ -97,7 +112,41 @@ app.get("/category/:category", (req, res) => {
   });
 });
 
+app.get("/admin/:token/garbage", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.params.token
+    }
+  }).then(authres => {
+    if (authres.ok) {
+      authres.json().then(json => {
+        if (!json.hatchTeam) {
+          res.status(404).render("404");
+        } else {
+          db.get("SELECT * FROM categories WHERE id = 7", (err, row) => {
+            if (row === undefined) {
+              res.status(404).render("404");
+            }
+            db.all("SELECT * FROM topics WHERE category = 7", (err, topics) => {
+              res.render("category", {
+                category: row,
+                topics: topics
+              });
+            });
+          });
+        }
+      });
+    } else {
+      res.status(404).render("404");
+    }
+  });
+});
+
 app.get("/category/:category/new", (req, res) => {
+  if (req.params.category === "7") {
+    res.status(404).render("404");
+    return;
+  }
   db.get("SELECT * FROM categories WHERE id = ?", [req.params.category], (err, row) => {
     if (row === undefined) {
       res.status(404).render("404");
@@ -158,7 +207,7 @@ app.post("/api/new/topic", (req, res) => {
     res.sendStatus(fres.status);
     if (fres.status === 200) {
       fres.json().then(data => {
-        if (req.body.category === "1" && !data.hatchTeam) {
+        if ((req.body.category === "1" && !data.hatchTeam) || req.body.category === "7") {
           return;
         }
         db.get("SELECT COUNT(*) FROM topics", (err, count) => {

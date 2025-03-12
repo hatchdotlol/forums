@@ -17,7 +17,9 @@
         <a href="/">back</a>
         <h1><%= category.name %></h1>
         <p><%= category.description %></p>
-        <a class="button" href="/category/<%= category.id %>/new">New topic<%= category.id === 1 ? " (admins only)" : "" %></a>
+        <% if (category.id !== 7) { %>
+            <a class="button" href="/category/<%= category.id %>/new">New topic<%= category.id === 1 ? " (admins only)" : "" %></a>
+        <% } %>
         <div id="topics">
             <% let pinnedlist = []; %>
             <% let topiclist = []; %>
