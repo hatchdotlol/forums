@@ -190,6 +190,35 @@ app.get("/topic/:topic", (req, res) => {
   });
 });
 
+app.get("/report/:id", (req, res) => {
+  db.get("SELECT * FROM posts WHERE id = ?", [req.params.id], async (err, post) => {
+    if (post === undefined) {
+      res.status(404).render("404");
+    } else {
+      let get_reactions = (post) => new Promise((resolve) => {
+        db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
+          resolve(reactions);
+        });
+      });
+      let post_reactions = await Promise.all([post].map(post => get_reactions(post)));
+
+      let get_post_counts = (post) => new Promise((resolve) => {
+        db.get("SELECT COUNT(*) FROM posts WHERE author = ?", [post.author], (err, count) => {
+          if (!err) {
+            resolve(count["COUNT(*)"]);
+          }
+        });
+      });
+      let post_count = await Promise.all([post].map(post => get_post_counts(post)));
+      res.render("report", {
+        post: post,
+        post_count: post_count,
+        reactions: post_reactions
+      });
+    }
+  });
+});
+
 app.get("/*", (req, res) => {
   res.status(404).render("404");
 });
@@ -308,6 +337,23 @@ app.post("/api/pin/topic", (req, res) => {
       });
     } else {
       res.sendStatus(fres.status);
+    }
+  });
+});
+
+app.post("/api/report", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.header("Token")
+    }
+  }).then(fres => {
+    if (fres.ok) {
+      fres.json().then(author => {
+        db.run("INSERT INTO reports (author, reason, post) VALUES (?, ?, ?)", [author.name, req.body.reason, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
+        res.sendStatus(200);
+      });
+    } else {
+      res.sendStatus(401);
     }
   });
 });
