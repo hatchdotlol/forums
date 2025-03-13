@@ -273,6 +273,33 @@ app.get("/admin/:token/report/:id", (req, res) => {
   });
 });
 
+app.get("/admin", (req, res) => {
+  res.render("admin/auth");
+});
+app.get("/admin/garbage", (req, res) => {
+  res.render("admin/auth_garbage");
+});
+
+app.get("/admin/:token/", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.params.token
+    }
+  }).then(authres => {
+    if (authres.ok) {
+      authres.json().then(json => {
+        if (!json.hatchTeam) {
+          res.status(404).render("404");
+        } else {
+          res.render("admin/panel");
+        }
+      });
+    } else {
+      res.status(404).render("404");
+    }
+  });
+});
+
 app.get("/*", (req, res) => {
   res.status(404).render("404");
 });
