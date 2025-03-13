@@ -52,7 +52,8 @@
     top: 10px;
 }
 
-.post-reactions a.button {
+.post-reactions a.button,
+#report-button {
     user-select: none;
     background-color: var(--innerBlock);
     color: var(--univText) !important;
@@ -61,7 +62,13 @@
     padding: 0.4rem;
 }
 
-.post-reactions a.button:hover {
+#report-button {
+    display: inline-block;
+    width: fit-content;
+}
+
+.post-reactions a.button:hover,
+#report-button:hover {
     filter: brightness(1.3);
 }
 
