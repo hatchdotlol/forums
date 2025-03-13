@@ -276,6 +276,7 @@ app.get("/admin/:token/report/:id", (req, res) => {
 app.get("/admin", (req, res) => {
   res.render("admin/auth");
 });
+
 app.get("/admin/garbage", (req, res) => {
   res.render("admin/auth_garbage");
 });
