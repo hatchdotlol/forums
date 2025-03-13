@@ -9,14 +9,17 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
     integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <meta id="get-post" content="<%= post.id %>">
+    <meta id="get-report" content="<%= report.id %>">
     <title>Reported Post | Hatch Forums</title>
 </head>
 <body>
     <div id="navarea"></div>
     <div id="main">
         <h1>Reported Post</h1>
-		<p>Reported by <a href="https://dev.hatch.lol/user/?u=<%= report.author %>"><%= report.author %></a> for reason:</p>
+        <% if (report.resolved) { %>
+            <p>Marked as resolved</p>
+        <% } %>
+        <p>Reported by <a href="https://dev.hatch.lol/user/?u=<%= report.author %>"><%= report.author %></a> for reason:</p>
 		<p><i><%= report.reason %></i></p>
         <div class="block post" data-author="<%= post.author %>">
             <% let date = new Date(post.timestamp); %>
@@ -58,11 +61,15 @@
                 </section>
             </div>
         </div>
-        <a class="button" id="resolve_button" href="#">Mark as resolved</a>
+        <div class="actions-bar">
+            <a class="button" href="/topic/<%= post.topic %>#<%= post.id %>">View context</a>
+            <a class="button" id="resolve_button" href="#">Mark as <%= report.resolved ? "un" : "" %>resolved</a>
+        </div>
     </div>
     <div id="footercontainer"></div>
     <script src="https://dev.hatch.lol/navbar/navbar.js"></script>
     <script src="https://dev.hatch.lol/footer/footer.js"></script>
 	<script src="/topic.js"></script>
+    <script src="/admin_resolve_report.js"></script>
 </body>
 </html>

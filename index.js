@@ -66,7 +66,8 @@ db.run(`CREATE TABLE IF NOT EXISTS reports (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   author TEXT NOT NULL,
   reason TEXT NOT NULL,
-  post INTEGER NOT NULL
+  post INTEGER NOT NULL,
+  resolved BOOLEAN NOT NULL
 )`, (err) => {
   if (err) {
     console.error(err.message);
@@ -402,8 +403,38 @@ app.post("/api/report", (req, res) => {
   }).then(fres => {
     if (fres.ok) {
       fres.json().then(author => {
-        db.run("INSERT INTO reports (author, reason, post) VALUES (?, ?, ?)", [author.name, req.body.reason, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
+        db.run("INSERT INTO reports (author, reason, post, resolved) VALUES (?, ?, ?, false)", [author.name, req.body.reason, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
         res.sendStatus(200);
+      });
+    } else {
+      res.sendStatus(401);
+    }
+  });
+});
+
+app.post("/api/report/resolve", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.header("Token")
+    }
+  }).then(fres => {
+    if (fres.ok) {
+      db.get("SELECT * FROM reports WHERE id = ?", [req.body.report], (err, report) => {
+        if (err) {
+          res.sendStatus(500);
+          console.error(err.message);
+          return;
+        } else {
+          db.run("UPDATE reports SET resolved = ? WHERE id = ?", [!report.resolved, req.body.report], (err) => {
+            if (err) {
+              res.sendStatus(500);
+              console.error(err.message);
+              return;
+            } else {
+              res.sendStatus(200);
+            }
+          });
+        }
       });
     } else {
       res.sendStatus(401);
