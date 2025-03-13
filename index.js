@@ -63,6 +63,7 @@ db.run(`CREATE TABLE IF NOT EXISTS reactions (
 });
 
 db.run(`CREATE TABLE IF NOT EXISTS reports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
   author TEXT NOT NULL,
   reason TEXT NOT NULL,
   post INTEGER NOT NULL
@@ -215,6 +216,58 @@ app.get("/report/:id", (req, res) => {
         post_count: post_count,
         reactions: post_reactions
       });
+    }
+  });
+});
+
+app.get("/admin/:token/report/:id", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.params.token
+    }
+  }).then(authres => {
+    if (authres.ok) {
+      authres.json().then(json => {
+        if (!json.hatchTeam) {
+          res.status(404).render("404");
+        } else {
+          db.get("SELECT * FROM reports WHERE id = ?", [req.params.id], (err, report) => {
+            if (report === undefined) {
+              res.status(404).render("404");
+            } else {
+              db.get("SELECT * FROM posts WHERE id = ?", [report.post], async (err, post) => {
+                if (post === undefined) {
+                  res.status(500);
+                } else {
+                  let get_reactions = (post) => new Promise((resolve) => {
+                    db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
+                      resolve(reactions);
+                    });
+                  });
+                  let post_reactions = await Promise.all([post].map(post => get_reactions(post)));
+            
+                  let get_post_counts = (post) => new Promise((resolve) => {
+                    db.get("SELECT COUNT(*) FROM posts WHERE author = ?", [post.author], (err, count) => {
+                      if (!err) {
+                        resolve(count["COUNT(*)"]);
+                      }
+                    });
+                  });
+                  let post_count = await Promise.all([post].map(post => get_post_counts(post)));
+                  res.render("admin/report", {
+                    report: report,
+                    post: post,
+                    post_count: post_count,
+                    reactions: post_reactions
+                  });
+                }
+              });
+            }
+          });
+        }
+      });
+    } else {
+      res.status(404).render("404");
     }
   });
 });
