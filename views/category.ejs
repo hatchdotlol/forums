@@ -14,7 +14,9 @@
 <body>
     <div id="navarea"></div>
     <div id="main">
-        <a href="/">back</a>
+        <% if (category.id !== 7) { %>
+            <a href="/">back</a>
+        <% } %>
         <h1><%= category.name %></h1>
         <p><%= category.description %></p>
         <% if (category.id !== 7) { %>
