@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/root.css">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/style.css">
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/navbar/navbar.css">
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/footer/footer.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Reports | Hatch Forums</title>
+</head>
+<body>
+    <div id="navarea"></div>
+    <div id="main">
+        <h1>Reports</h1>
+        <div id="topics">
+            <% let unresolved = []; %>
+            <% let resolved = []; %>
+            <% for (let i = 0; i < reports.length; i++) { %>
+                <% if (reports[i].resolved === 0) { %>
+                    <% unresolved.push(reports[i]); %>
+                <% } else { %>
+                    <% resolved.unshift(reports[i]); %>
+                <%} %>
+            <% } %>
+            <% if (unresolved.length > 0) { %>
+                <h2>Unresolved</h2>
+            <% } %>
+            <% for (let i = 0; i < unresolved.length; i++) { %>
+                <a class="block" href="/admin/report/<%= unresolved[i].id %>"><%= unresolved[i].reason %></a>
+            <% } %>
+            <% if (resolved.length > 0) { %>
+                <h2>Resolved</h2>
+            <% } %>
+            <% for (let i = 0; i < resolved.length; i++) { %>
+                <a class="block" href="/admin/report/<%= resolved[i].id %>"><%= resolved[i].reason %></a>
+            <% } %>
+        </div>
+    </div>
+    <div id="footercontainer"></div>
+    <script src="https://dev.hatch.lol/navbar/navbar.js"></script>
+    <script src="https://dev.hatch.lol/footer/footer.js"></script>
+</body>
+</html>

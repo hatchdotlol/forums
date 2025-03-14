@@ -273,12 +273,44 @@ app.get("/admin/:token/report/:id", (req, res) => {
   });
 });
 
+app.get("/admin/:token/reports", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.params.token
+    }
+  }).then(authres => {
+    if (authres.ok) {
+      authres.json().then(json => {
+        if (!json.hatchTeam) {
+          res.status(404).render("404");
+        } else {
+          db.all("SELECT * FROM reports", (err, reports) => {
+            res.render("admin/reports", {
+              reports: reports
+            });
+          });
+        }
+      });
+    } else {
+      res.status(404).render("404");
+    }
+  });
+});
+
 app.get("/admin", (req, res) => {
   res.render("admin/auth");
 });
 
 app.get("/admin/garbage", (req, res) => {
-  res.render("admin/auth_garbage");
+  res.render("admin/auth");
+});
+
+app.get("/admin/reports", (req, res) => {
+  res.render("admin/auth");
+});
+
+app.get("/admin/report/:id", (req, res) => {
+  res.render("admin/auth");
 });
 
 app.get("/admin/:token/", (req, res) => {

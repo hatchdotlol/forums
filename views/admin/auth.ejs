@@ -6,7 +6,7 @@
 <body>
 	<p>Please wait....</p>
     <script>
-		window.location.href = `/admin/${localStorage.getItem("token")}/`;
+		window.location.href = window.location.href.replace("admin", `admin/${localStorage.getItem("token")}`);
 	</script>
 </body>
 </html>
