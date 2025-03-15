@@ -339,6 +339,10 @@ app.get("/admin/report/:id", (req, res) => {
   res.render("admin/auth");
 });
 
+app.get("/admin/delete/post/:id", (req, res) => {
+  res.render("admin/auth");
+});
+
 app.get("/admin/:token/", (req, res) => {
   fetch("https://api.hatch.lol/auth/me", {
     headers: {
@@ -358,6 +362,52 @@ app.get("/admin/:token/", (req, res) => {
     }
   });
 });
+
+app.get("/admin/:token/delete/post/:id", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.params.token
+    }
+  }).then(authres => {
+    if (authres.ok) {
+      authres.json().then(json => {
+        if (!json.hatchTeam) {
+          res.status(404).render("404");
+        } else {
+          db.get("SELECT * FROM posts WHERE id = ?", [req.params.id], async (err, post) => {
+            if (post === undefined) {
+              res.status(500);
+            } else {
+              let get_reactions = (post) => new Promise((resolve) => {
+                db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
+                  resolve(reactions);
+                });
+              });
+              let post_reactions = await Promise.all([post].map(post => get_reactions(post)));
+        
+              let get_post_counts = (post) => new Promise((resolve) => {
+                db.get("SELECT COUNT(*) FROM posts WHERE author = ?", [post.author], (err, count) => {
+                  if (!err) {
+                    resolve(count["COUNT(*)"]);
+                  }
+                });
+              });
+              let post_count = await Promise.all([post].map(post => get_post_counts(post)));
+              res.render("admin/delete_post", {
+                post: post,
+                post_count: post_count,
+                reactions: post_reactions
+              });
+            }
+          });
+        }
+      });
+    } else {
+      res.status(404).render("404");
+    }
+  });
+});
+
 
 app.get("/*", (req, res) => {
   res.status(404).render("404");
@@ -573,7 +623,8 @@ app.post("/api/delete/post", (req, res) => {
           res.sendStatus(403);
           return;
         }
-        db.run("DELETE * FROM posts WHERE id = ?", [req.body.post], (err) => { if (err) { res.sendStatus(500); return; } });
+        db.run("DELETE FROM posts WHERE id = ?", [req.body.post], (err) => { if (err) { res.sendStatus(500); return; } });
+        res.sendStatus(200);
       });
     } else {
       res.sendStatus(401);
