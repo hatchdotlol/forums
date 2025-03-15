@@ -29,9 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const mod_actions_bar = document.querySelector("#mod-actions");
+    const post_deletion_buttons = document.querySelectorAll(".post-deletion-button");
 
     if (!localStorage.getItem("token")) {
         mod_actions_bar.remove();
+        Array.from(post_deletion_buttons).forEach(button => button.remove());
     }
     
     fetch("https://api.hatch.lol/auth/me", {
@@ -43,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fres.json().then(data => {
                 if (!data.hatchTeam) {
                     mod_actions_bar.remove();
+                    Array.from(post_deletion_buttons).forEach(button => button.remove());
                 } else {
                     document.querySelector("#pin-topic-button").addEventListener("click", () => {
                         fetch("/api/pin/topic", {
@@ -60,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         } else {
             mod_actions_bar.remove();
+            Array.from(post_deletion_buttons).forEach(button => button.remove());
         }
     });
 });
