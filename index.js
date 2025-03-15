@@ -77,7 +77,8 @@ db.run(`CREATE TABLE IF NOT EXISTS reports (
   author TEXT NOT NULL,
   reason TEXT NOT NULL,
   post INTEGER NOT NULL,
-  resolved BOOLEAN NOT NULL
+  resolved BOOLEAN NOT NULL,
+  timestamp INTEGER NOT NULL
 )`, (err) => {
   if (err) {
     console.error(err.message);
@@ -482,7 +483,7 @@ app.post("/api/report", (req, res) => {
             res.sendStatus(404);
             return;
           }
-          db.run("INSERT INTO reports (author, reason, post, resolved) VALUES (?, ?, ?, false)", [author.name, req.body.reason, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
+          db.run("INSERT INTO reports (author, reason, post, resolved, timestamp) VALUES (?, ?, ?, false, ?)", [author.name, req.body.reason, req.body.post, Date.now()], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
           res.sendStatus(200);
           report_webhook.send(new MessageBuilder()
             .setTitle(`New report filed by ${author.name}`)

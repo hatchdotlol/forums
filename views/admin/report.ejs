@@ -19,8 +19,10 @@
         <% if (report.resolved) { %>
             <p>Marked as resolved</p>
         <% } %>
+        <% let rdate = new Date(report.timestamp); %>
+        <p>Reported <%= ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][rdate.getMonth()] %> <%= rdate.getDate() %> <%= rdate.getFullYear() %> <%= rdate.getHours() %>:<%= rdate.getMinutes().toString().length === 1 ? "0" : "" %><%= rdate.getMinutes() %>:<%= rdate.getSeconds().toString().length === 1 ? "0" : "" %><%= rdate.getSeconds() %></p>
         <p>Reported by <a href="https://dev.hatch.lol/user/?u=<%= report.author %>"><%= report.author %></a> for reason:</p>
-		<p><i><%= report.reason %></i></p>
+        <p><i><%= report.reason %></i></p>
         <div class="block post" data-author="<%= post.author %>">
             <% let date = new Date(post.timestamp); %>
             <div class="post-header">
