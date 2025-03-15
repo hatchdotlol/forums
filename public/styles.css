@@ -53,22 +53,22 @@
 }
 
 .post-reactions a.button,
-#report-button {
+.report-button {
     user-select: none;
-    background-color: var(--innerBlock);
+    background-color: var(--innerBlock) !important;
     color: var(--univText) !important;
     text-wrap: nowrap;
     width: calc(100% - 0.8rem);
-    padding: 0.4rem;
+    padding: 0.4rem !important;
 }
 
-#report-button {
-    display: inline-block;
-    width: fit-content;
+.report-button {
+    display: inline-block !important;
+    width: fit-content !important;
 }
 
 .post-reactions a.button:hover,
-#report-button:hover {
+.report-button:hover {
     filter: brightness(1.3);
 }
 

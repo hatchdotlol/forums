@@ -25,7 +25,7 @@
                     <% let date = new Date(posts[i].timestamp); %>
                     <div class="post-header">
                         #<%= i+1 %> <span class="post-date"><%= ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date.getMonth()] %> <%= date.getDate() %> <%= date.getFullYear() %> <%= date.getHours() %>:<%= date.getMinutes().toString().length === 1 ? "0" : "" %><%= date.getMinutes() %>:<%= date.getSeconds().toString().length === 1 ? "0" : "" %><%= date.getSeconds() %></span>
-                        <a class="button" id="report-button" title="Report" href="/report/<%= posts[i].id %>">🚩</a>
+                        <a class="button report-button" title="Report" href="/report/<%= posts[i].id %>">🚩</a>
                     </div>
                     <div class="post-stuff">
                         <section>
