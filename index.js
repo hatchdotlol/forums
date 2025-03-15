@@ -509,22 +509,28 @@ app.post("/api/report/resolve", (req, res) => {
     }
   }).then(fres => {
     if (fres.ok) {
-      db.get("SELECT * FROM reports WHERE id = ?", [req.body.report], (err, report) => {
-        if (err) {
-          res.sendStatus(500);
-          console.error(err.message);
+      fres.json().then(data => {
+        if (!data.hatchTeam) {
+          res.sendStatus(403);
           return;
-        } else {
-          db.run("UPDATE reports SET resolved = ? WHERE id = ?", [!report.resolved, req.body.report], (err) => {
-            if (err) {
-              res.sendStatus(500);
-              console.error(err.message);
-              return;
-            } else {
-              res.sendStatus(200);
-            }
-          });
         }
+        db.get("SELECT * FROM reports WHERE id = ?", [req.body.report], (err, report) => {
+          if (err) {
+            res.sendStatus(500);
+            console.error(err.message);
+            return;
+          } else {
+            db.run("UPDATE reports SET resolved = ? WHERE id = ?", [!report.resolved, req.body.report], (err) => {
+              if (err) {
+                res.sendStatus(500);
+                console.error(err.message);
+                return;
+              } else {
+                res.sendStatus(200);
+              }
+            });
+          }
+        });
       });
     } else {
       res.sendStatus(401);
