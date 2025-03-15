@@ -538,6 +538,26 @@ app.post("/api/report/resolve", (req, res) => {
   });
 });
 
+app.post("/api/delete/post", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.header("Token")
+    }
+  }).then(fres => {
+    if (fres.ok) {
+      fres.json().then(data => {
+        if (!data.hatchTeam) {
+          res.sendStatus(403);
+          return;
+        }
+        db.run("DELETE * FROM posts WHERE id = ?", [req.body.post], (err) => { if (err) { res.sendStatus(500); return; } });
+      });
+    } else {
+      res.sendStatus(401);
+    }
+  });
+});
+
 app.listen(port, () => {
   console.log(`listening on http://localhost:${port}`);
 });
