@@ -24,6 +24,10 @@ const db = new sqlite.Database("./db.db", (err) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+process.on("uncaughtException", (err) => {
+  console.error(`${err.message}`);
+});
+
 db.run(`CREATE TABLE IF NOT EXISTS categories (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
