@@ -29,6 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const pin_topic_button = document.querySelector("#pin-topic-button");
+
+    if (localStorage.getItem("token")) {
+        pin_topic_button.remove();
+    }
     
     fetch("https://api.hatch.lol/auth/me", {
         headers: {
@@ -37,6 +41,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }).then(fres => {
         if (fres.status === 200) {
             fres.json().then(data => {
+                if (!data.hatchTeam) {
+                    pin_topic_button.remove();
+                }
                 pin_topic_button.addEventListener("click", () => {
                     fetch("/api/pin/topic", {
                         method: "POST",
@@ -50,6 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 });
             });
+        } else {
+            pin_topic_button.remove();
         }
     });
 });
