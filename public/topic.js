@@ -28,10 +28,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    const pin_topic_button = document.querySelector("#pin-topic-button");
+    const mod_actions_bar = document.querySelector("#mod-actions");
 
     if (!localStorage.getItem("token")) {
-        pin_topic_button.remove();
+        mod_actions_bar.remove();
     }
     
     fetch("https://api.hatch.lol/auth/me", {
@@ -42,23 +42,24 @@ document.addEventListener("DOMContentLoaded", () => {
         if (fres.status === 200) {
             fres.json().then(data => {
                 if (!data.hatchTeam) {
-                    pin_topic_button.remove();
-                }
-                pin_topic_button.addEventListener("click", () => {
-                    fetch("/api/pin/topic", {
-                        method: "POST",
-                        headers: {
-                            "Content-type": "application/json",
-                            "Token": localStorage.getItem("token")
-                        },
-                        body: JSON.stringify({
-                            "id": document.querySelector("#get-topic").content
-                        })
+                    mod_actions_bar.remove();
+                } else {
+                    document.querySelector("#pin-topic-button").addEventListener("click", () => {
+                        fetch("/api/pin/topic", {
+                            method: "POST",
+                            headers: {
+                                "Content-type": "application/json",
+                                "Token": localStorage.getItem("token")
+                            },
+                            body: JSON.stringify({
+                                "id": document.querySelector("#get-topic").content
+                            })
+                        });
                     });
-                });
+                }
             });
         } else {
-            pin_topic_button.remove();
+            mod_actions_bar.remove();
         }
     });
 });

@@ -1,13 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#delete_button").addEventListener("click", () => {
-        fetch("/api/delete/post", {
+        fetch("/api/delete/topic", {
             method: "POST",
             headers: {
                 "Content-type": "application/json",
                 "Token": localStorage.getItem("token")
             },
             body: JSON.stringify({
-                "post": document.querySelector("#get-post").content
+                "topic": document.querySelector("#get-topic").content
             })
         }).then(res => {
             if (res.status === 200) {

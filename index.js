@@ -187,7 +187,7 @@ app.get("/category/:category/new", (req, res) => {
 
 app.get("/topic/:topic", (req, res) => {
   db.get("SELECT * FROM topics WHERE id = ?", [req.params.topic], (err, topic) => {
-    if (topic === undefined) {
+    if (topic === undefined || topic.category === 7) {
       res.status(404).render("404");
     }
     db.all("SELECT * FROM posts WHERE topic = ?", [req.params.topic], async (err, posts) => {
@@ -213,7 +213,6 @@ app.get("/topic/:topic", (req, res) => {
         reactions: post_reactions,
         post_count: post_count
       });
-
     });
   });
 });
@@ -331,6 +330,10 @@ app.get("/admin/garbage", (req, res) => {
   res.render("admin/auth");
 });
 
+app.get("/admin/garbage/topic/:id", (req, res) => {
+  res.render("admin/auth");
+});
+
 app.get("/admin/reports", (req, res) => {
   res.render("admin/auth");
 });
@@ -340,6 +343,10 @@ app.get("/admin/report/:id", (req, res) => {
 });
 
 app.get("/admin/delete/post/:id", (req, res) => {
+  res.render("admin/auth");
+});
+
+app.get("/admin/delete/topic/:id", (req, res) => {
   res.render("admin/auth");
 });
 
@@ -373,10 +380,12 @@ app.get("/admin/:token/delete/post/:id", (req, res) => {
       authres.json().then(json => {
         if (!json.hatchTeam) {
           res.status(404).render("404");
+          return;
         } else {
           db.get("SELECT * FROM posts WHERE id = ?", [req.params.id], async (err, post) => {
-            if (post === undefined) {
-              res.status(500);
+            if (err || post === undefined) {
+              res.sendStatus(500);
+              return;
             } else {
               let get_reactions = (post) => new Promise((resolve) => {
                 db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
@@ -408,6 +417,108 @@ app.get("/admin/:token/delete/post/:id", (req, res) => {
   });
 });
 
+app.get("/admin/:token/delete/topic/:id", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.params.token
+    }
+  }).then(authres => {
+    if (authres.ok) {
+      authres.json().then(json => {
+        if (!json.hatchTeam) {
+          res.status(404).render("404");
+          return;
+        } else {
+          db.get("SELECT * FROM topics WHERE id = ?", [req.params.id], (err, topic) => {
+            if (err || topic === undefined) {
+              res.sendStatus(500);
+              return;
+            }
+            db.all("SELECT * FROM posts WHERE topic = ?", [req.params.id], async (err, post) => {
+              if (err || post === undefined) {
+                res.sendStatus(500);
+                return;
+              } else {
+                let fpost = post[0];
+                let get_reactions = (post) => new Promise((resolve) => {
+                  db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
+                    resolve(reactions);
+                  });
+                });
+                let post_reactions = await Promise.all([fpost].map(post => get_reactions(post)));
+          
+                let get_post_counts = (post) => new Promise((resolve) => {
+                  db.get("SELECT COUNT(*) FROM posts WHERE author = ?", [post.author], (err, count) => {
+                    if (!err) {
+                      resolve(count["COUNT(*)"]);
+                    }
+                  });
+                });
+                let post_count = await Promise.all([fpost].map(post => get_post_counts(post)));
+                res.render("admin/delete_topic", {
+                  topic: topic,
+                  post: fpost,
+                  post_count: post_count,
+                  reactions: post_reactions
+                });
+              }
+            });
+          });
+        }
+      });
+    } else {
+      res.status(404).render("404");
+    }
+  });
+});
+
+app.get("/admin/:token/garbage/topic/:topic", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.params.token
+    }
+  }).then(authres => {
+    if (authres.ok) {
+      authres.json().then(json => {
+        if (!json.hatchTeam) {
+          res.status(404).render("404");
+        } else {
+          db.get("SELECT * FROM topics WHERE id = ?", [req.params.topic], (err, topic) => {
+            if (topic === undefined) {
+              res.status(404).render("404");
+            }
+            db.all("SELECT * FROM posts WHERE topic = ?", [req.params.topic], async (err, posts) => {
+              let get_reactions = (post) => new Promise((resolve) => {
+                db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
+                  resolve(reactions);
+                });
+              });
+              let post_reactions = await Promise.all(posts.map(post => get_reactions(post)));
+        
+              let get_post_counts = (post) => new Promise((resolve) => {
+                db.get("SELECT COUNT(*) FROM posts WHERE author = ?", [post.author], (err, count) => {
+                  if (!err) {
+                    resolve(count["COUNT(*)"]);
+                  }
+                });
+              });
+              let post_count = await Promise.all(posts.map(post => get_post_counts(post)));
+        
+              res.render("topic", {
+                topic: topic,
+                posts: posts,
+                reactions: post_reactions,
+                post_count: post_count
+              });
+            });
+          });
+        }
+      });
+    } else {
+      res.status(404).render("404");
+    }
+  });
+});
 
 app.get("/*", (req, res) => {
   res.status(404).render("404");
@@ -623,8 +734,27 @@ app.post("/api/delete/post", (req, res) => {
           res.sendStatus(403);
           return;
         }
-        db.run("DELETE FROM posts WHERE id = ?", [req.body.post], (err) => { if (err) { res.sendStatus(500); return; } });
-        res.sendStatus(200);
+        db.run("DELETE FROM posts WHERE id = ?", [req.body.post], (err) => { if (err) { res.sendStatus(500); return; } else { res.sendStatus(200); } });
+      });
+    } else {
+      res.sendStatus(401);
+    }
+  });
+});
+
+app.post("/api/delete/topic", (req, res) => {
+  fetch("https://api.hatch.lol/auth/me", {
+    headers: {
+      "Token": req.header("Token")
+    }
+  }).then(fres => {
+    if (fres.ok) {
+      fres.json().then(data => {
+        if (!data.hatchTeam) {
+          res.sendStatus(403);
+          return;
+        }
+        db.run("UPDATE topics SET category = 7 WHERE id = ?", [req.body.topic], (err) => { if (err) { res.sendStatus(500); return; } else { res.sendStatus(200); } });
       });
     } else {
       res.sendStatus(401);
