@@ -9,6 +9,17 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+const filterlist = require("./filter.json");
+const filter = (str) => {
+  let appropriate = true;
+  for (let i = 0; i < filterlist.length; i++) {
+    if (str.match(filterlist[i])) {
+      appropriate = false;
+    }
+  }
+  return appropriate;
+}
+
 const report_webhook = new Webhook(process.env.DISCORD_REPORT_WEBHOOK_URL).setUsername("Hatch Reports (Forums)");
 
 const app = express();
@@ -376,8 +387,10 @@ app.post("/api/new/topic", (req, res) => {
             content = `User agent: ${req.headers["user-agent"]}\n\n${req.body.content}`;
           }
 
-          db.run("INSERT INTO topics (name, author, category, pinned) VALUES (?, ?, ?, false)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
-          db.run("INSERT INTO posts (author, content, topic, timestamp) VALUES (?, ?, ?, ?)", [data.name, content, count["COUNT(*)"]+1, Date.now()], (err) => { if (err) { console.error(err.message); } });
+          if (filter(req.body.title) && filter(content)) {
+            db.run("INSERT INTO topics (name, author, category, pinned) VALUES (?, ?, ?, false)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
+            db.run("INSERT INTO posts (author, content, topic, timestamp) VALUES (?, ?, ?, ?)", [data.name, content, count["COUNT(*)"]+1, Date.now()], (err) => { if (err) { console.error(err.message); } });
+          }
         });
       });
     }
@@ -397,7 +410,9 @@ app.post("/api/new/post", (req, res) => {
     res.sendStatus(fres.status);
     if (fres.status === 200) {
       fres.json().then(data => {
-        db.run("INSERT INTO posts (author, content, topic, timestamp) VALUES (?, ?, ?, ?)", [data.name, req.body.content, req.body.topic, Date.now()], (err) => { if (err) { console.error(err.message); } });
+        if (filter(req.body.content)) {
+          db.run("INSERT INTO posts (author, content, topic, timestamp) VALUES (?, ?, ?, ?)", [data.name, req.body.content, req.body.topic, Date.now()], (err) => { if (err) { console.error(err.message); } });
+        }
       });
     }
   });

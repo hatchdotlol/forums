@@ -6,3 +6,5 @@ node_modules
 
 *.db
 *.env
+
+filter.json
