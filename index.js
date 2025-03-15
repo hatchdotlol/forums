@@ -391,7 +391,7 @@ app.post("/api/new/topic", (req, res) => {
             db.run("INSERT INTO posts (author, content, topic, timestamp) VALUES (?, ?, ?, ?)", [data.name, content, count["COUNT(*)"]+1, Date.now()], (err) => { if (err) { console.error(err.message); } });
             res.sendStatus(200);
           } else {
-            res.sendStatus(400).send({ "message": "Inappropriate content" });
+            res.sendStatus(400).send("Inappropriate content");
           }
         });
       });
