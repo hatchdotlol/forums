@@ -4,10 +4,16 @@ const express = require("express");
 const path = require("path");
 const sqlite = require("sqlite3");
 const bodyParser = require("body-parser");
+const { Webhook, MessageBuilder } = require("discord-webhook-node");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+const report_webhook = new Webhook(process.env.DISCORD_REPORT_WEBHOOK_URL).setUsername("Hatch Reports (Forums)");
 
 const app = express();
 
-const port = parseInt(process.env.PORT) || process.argv[3] || 8000;
+const port = parseInt(process.env.PORT) || process.argv[3] || 5500;
 
 const db = new sqlite.Database("./db.db", (err) => {
   if (err) {
@@ -463,8 +469,24 @@ app.post("/api/report", (req, res) => {
   }).then(fres => {
     if (fres.ok) {
       fres.json().then(author => {
-        db.run("INSERT INTO reports (author, reason, post, resolved) VALUES (?, ?, ?, false)", [author.name, req.body.reason, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
-        res.sendStatus(200);
+        console.log(req.body.post);
+        db.get("SELECT * FROM posts WHERE id = ?", [req.body.post], (err, post) => {
+          if (err || typeof post === "undefined") {
+            res.sendStatus(404);
+            return;
+          }
+          db.run("INSERT INTO reports (author, reason, post, resolved) VALUES (?, ?, ?, false)", [author.name, req.body.reason, req.body.post], (err) => { if (err) { res.sendStatus(500); console.error(err.message); return; } });
+          res.sendStatus(200);
+          report_webhook.send(new MessageBuilder()
+            .setTitle(`New report filed by ${author.name}`)
+            .addField("Reason", `\`\`\`${req.body.reason.replace(/`/g, "'")}\`\`\``)
+            .addField("Post", `\`\`\`${post.content.replace(/`/g, "'")}\`\`\``)
+            .addField("Post URL", `https://forums.hatch.lol/topic/${post.topic}#${post.id}`)
+            .setFooter("View all reports at https://forums.hatch.lol/admin/reports/")
+            .setColor("#ff4444")
+            .setTimestamp()
+          );
+        });
       });
     } else {
       res.sendStatus(401);
