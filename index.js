@@ -373,8 +373,7 @@ app.post("/api/new/topic", (req, res) => {
       res.sendStatus(400);
       return;
     }
-    res.sendStatus(fres.status);
-    if (fres.status === 200) {
+    if (fres.ok) {
       fres.json().then(data => {
         if ((req.body.category === "1" && !data.hatchTeam) || req.body.category === "7") {
           return;
@@ -390,9 +389,14 @@ app.post("/api/new/topic", (req, res) => {
           if (filter(req.body.title) && filter(content)) {
             db.run("INSERT INTO topics (name, author, category, pinned) VALUES (?, ?, ?, false)", [req.body.title, data.name, req.body.category], (err) => { if (err) { console.error(err.message); } });
             db.run("INSERT INTO posts (author, content, topic, timestamp) VALUES (?, ?, ?, ?)", [data.name, content, count["COUNT(*)"]+1, Date.now()], (err) => { if (err) { console.error(err.message); } });
+            res.sendStatus(200);
+          } else {
+            res.sendStatus(400).send({ "message": "Inappropriate content" });
           }
         });
       });
+    } else {
+      res.sendStatus(403);
     }
   });
 });
@@ -407,13 +411,17 @@ app.post("/api/new/post", (req, res) => {
       res.sendStatus(400);
       return;
     }
-    res.sendStatus(fres.status);
-    if (fres.status === 200) {
+    if (fres.ok) {
       fres.json().then(data => {
         if (filter(req.body.content)) {
           db.run("INSERT INTO posts (author, content, topic, timestamp) VALUES (?, ?, ?, ?)", [data.name, req.body.content, req.body.topic, Date.now()], (err) => { if (err) { console.error(err.message); } });
+          res.sendStatus(200);
+        } else {
+          res.sendStatus(400).send("Inappropriate content");
         }
       });
+    } else {
+      res.sendStatus(403);
     }
   });
 });
@@ -429,7 +437,7 @@ app.post("/api/new/reaction", (req, res) => {
       "Token": req.header("Token")
     }
   }).then(fres => {
-    if (fres.status === 200) {
+    if (fres.ok) {
       fres.json().then(data => {
         db.get("SELECT * FROM reactions WHERE author = ? AND type = ? AND post = ?", [data.name, req.body.reaction, req.body.post], (err, reaction) => {
           if (err) {
@@ -446,7 +454,7 @@ app.post("/api/new/reaction", (req, res) => {
         });
       });
     } else {
-      res.sendStatus(fres.status);
+      res.sendStatus(403);
     }
   });
 });
@@ -457,7 +465,7 @@ app.post("/api/pin/topic", (req, res) => {
       "Token": req.header("Token")
     }
   }).then(fres => {
-    if (fres.status === 200) {
+    if (fres.ok) {
       fres.json().then(data => {
         if (!data.hatchTeam) {
           res.sendStatus(403);
@@ -480,7 +488,7 @@ app.post("/api/pin/topic", (req, res) => {
         });
       });
     } else {
-      res.sendStatus(fres.status);
+      res.sendStatus(403);
     }
   });
 });
