@@ -1,4 +1,4 @@
-const version = "3.0.0";
+const version = "2.2.1";
 
 const express = require("express");
 const path = require("path");
@@ -86,7 +86,11 @@ db.run(`CREATE TABLE IF NOT EXISTS reports (
 // db.run("INSERT INTO categories (name, description) VALUES ('Project Help', 'Need help with a project? Ask for help here.')", (err) => { if (err) { console.error(err.message); } });
 // db.run("INSERT INTO categories (name, description) VALUES ('Bug Reports', 'Report bugs found on Hatch here.')", (err) => { if (err) { console.error(err.message); } });
 // db.run("INSERT INTO categories (name, description) VALUES ('Show and Tell', 'Show off your creations here!')", (err) => { if (err) { console.error(err.message); } });
-// db.run("INSERT INTO categories (name, description) VALUES ('Garbage Dump', 'Where posts go when they die')", (err) => { if (err) { console.error(err.message); } });
+db.get("SELECT COUNT(*) FROM posts WHERE author = ?", [post.author], (err, count) => {
+  if (!err && count["COUNT(*)"] < 7) {
+    db.run("INSERT INTO categories (name, description) VALUES ('Garbage Dump', 'Where posts go when they die')", (err) => { if (err) { console.error(err.message); } });
+  }
+});
 
 app.use(express.static(path.join(__dirname, "public")))
   .set("views", path.join(__dirname, "views"))
