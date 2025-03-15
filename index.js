@@ -473,7 +473,6 @@ app.post("/api/report", (req, res) => {
   }).then(fres => {
     if (fres.ok) {
       fres.json().then(author => {
-        console.log(req.body.post);
         db.get("SELECT * FROM posts WHERE id = ?", [req.body.post], (err, post) => {
           if (err || typeof post === "undefined") {
             res.sendStatus(404);
