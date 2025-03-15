@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const pin_topic_button = document.querySelector("#pin-topic-button");
 
-    if (localStorage.getItem("token")) {
+    if (!localStorage.getItem("token")) {
         pin_topic_button.remove();
     }
     
