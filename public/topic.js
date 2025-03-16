@@ -15,6 +15,8 @@ const glitter = (str) => {
         .replace(/\[quote=([a-z,A-Z,0-9,\-,_]+)\]/g, "<blockquote><p><b><a href='https://dev.hatch.lol/user/?u=$1'>@$1</a> said:</b></p>")
         .replace(/\[quote\]/g, "<blockquote>")
         .replace(/\[\/quote\]/g, "</blockquote>")
+        .replace(/\[colou?r=(#?[a-z,A-Z,0-9,]+)\]/g, "<hfm-color style='color: $1'>")
+        .replace(/\[\/colou?r\]/g, "</hfm-color>")
 }
 
 document.addEventListener("DOMContentLoaded", () => {
