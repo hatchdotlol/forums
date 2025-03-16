@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
             element.querySelector(".post-user-role").innerText = data.hatchTeam === true ? "Hatch Team" : "Hatchling";
         });
     });
+
     Array.from(document.getElementsByClassName("post-content")).forEach(element => {
         element.innerHTML = marked.parse(element.innerText
             .replace(/&/g, "&amp;")
@@ -37,6 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     "post": element.dataset.post
                 })
             });
+        });
+    });
+
+    Array.from(document.getElementsByClassName("post-reply-button")).forEach(element => {
+        element.addEventListener("click", () => {
+            document.querySelector("#new_post_content").value = `${document.querySelector("#new_post_content").value}[quote=${element.parentElement.parentElement.dataset.author}]\n${element.dataset.postcontent}\n[/quote]`;
+            document.querySelector("#new_post_content").focus();
         });
     });
 
