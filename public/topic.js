@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Array.from(document.getElementsByClassName("post")).forEach(element => {
         fetch(`https://api.hatch.lol/users/${element.dataset.author}`).then(res => res.json()).then(data => {
             element.querySelector(".post-user-name").innerText = data.displayName;
-            element.querySelector(".post-pfp").src = data.profilePicture.startsWith("data:image") ? data.profilePicture : `https://api.hatch.lol/${data.profilePicture}`;
+            element.querySelector(".post-pfp").src = `https://api.hatch.lol${data.profilePicture}?size=120`;
             element.querySelector(".post-user-role").innerText = data.hatchTeam === true ? "Hatch Team" : "Hatchling";
         });
     });
