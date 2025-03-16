@@ -127,12 +127,6 @@ input::placeholder {
     cursor: pointer;
 }
 
-.post_form input {
-    width: calc(100% - 20px);
-    font-family: inherit;
-    font-size: inherit;
-}
-
 #new_post_title {
     margin-bottom: 10px;
 }
@@ -188,7 +182,8 @@ blockquote {
     margin-bottom: 10px;
 }
 
-#new_post_content_container * {
+#new_post_content,
+#new_post_content_preview_container {
     flex: 1 1 0px;
 }
 
