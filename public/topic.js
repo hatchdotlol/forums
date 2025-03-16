@@ -8,9 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     Array.from(document.getElementsByClassName("post-content")).forEach(element => {
         element.innerHTML = element.innerHTML
-            .replace(/&/g, "&amp;")
-            .replace(/>/g, "&gt;")
-            .replace(/</g, "&lt;")
             .replace(/(https?:\/\/\S+)/g, "<a href='$1'>$1</a>")
             .replace(/@([a-z,A-Z,0-9,-,_]+)\b/g, "<a href='https://dev.hatch.lol/user/?u=$1'>@$1</a>")
             .replace(/:glungus:/g, "<img class='emoji' src='https://dev.hatch.lol/images/emojis/glungus.png' alt='glungus'>")
