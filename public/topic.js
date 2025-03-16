@@ -1,6 +1,27 @@
 import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
+const glitter = (str) => {
+    return marked.parse(str
+        .replace(/&/g, "&amp;")
+        .replace(/>/g, "&gt;")
+        .replace(/</g, "&lt;"))
+        .replace(/@([a-z,A-Z,0-9,\-,_]+)\b/g, "<a href='https://dev.hatch.lol/user/?u=$1'>@$1</a>")
+        .replace(/:glungus:/g, "<img class='emoji' src='https://dev.hatch.lol/images/emojis/glungus.png' alt='glungus'>")
+        .replace(/:(tada|hooray):/g, "🎉")
+        .replace(/:(\+1|thumbsup):/g, "👍")
+        .replace(/:(\-1|thumbsdown):/g, "👎")
+        .replace(/:skull:/g, "💀")
+        .replace(/:(hatch(dotlol)?|kyle):/g, "🐣")
+        .replace(/\[quote=([a-z,A-Z,0-9,\-,_]+)\]/g, "<blockquote><p><b><a href='https://dev.hatch.lol/user/?u=$1'>@$1</a> said:</b></p>")
+        .replace(/\[quote\]/g, "<blockquote>")
+        .replace(/\[\/quote\]/g, "</blockquote>")
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("#new_post_content").addEventListener("keyup", () => {
+        document.querySelector("#new_post_content_preview").innerHTML = glitter(document.querySelector("#new_post_content").value);
+    });
+
     Array.from(document.getElementsByClassName("post")).forEach(element => {
         fetch(`https://api.hatch.lol/users/${element.dataset.author}`).then(res => res.json()).then(data => {
             element.querySelector(".post-user-name").innerText = data.displayName;
@@ -10,20 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     Array.from(document.getElementsByClassName("post-content")).forEach(element => {
-        element.innerHTML = marked.parse(element.innerText
-            .replace(/&/g, "&amp;")
-            .replace(/>/g, "&gt;")
-            .replace(/</g, "&lt;"))
-            .replace(/@([a-z,A-Z,0-9,\-,_]+)\b/g, "<a href='https://dev.hatch.lol/user/?u=$1'>@$1</a>")
-            .replace(/:glungus:/g, "<img class='emoji' src='https://dev.hatch.lol/images/emojis/glungus.png' alt='glungus'>")
-            .replace(/:(tada|hooray):/g, "🎉")
-            .replace(/:(\+1|thumbsup):/g, "👍")
-            .replace(/:(\-1|thumbsdown):/g, "👎")
-            .replace(/:skull:/g, "💀")
-            .replace(/:(hatch(dotlol)?|kyle):/g, "🐣")
-            .replace(/\[quote=([a-z,A-Z,0-9,\-,_]+)\]/g, "<blockquote><p><b><a href='https://dev.hatch.lol/user/?u=$1'>@$1</a> said:</b></p>")
-            .replace(/\[quote\]/g, "<blockquote>")
-            .replace(/\[\/quote\]/g, "</blockquote>")
+        element.innerHTML = glitter(element.innerText);
     });
 
     Array.from(document.getElementsByClassName("post-reaction-button")).forEach(element => {
