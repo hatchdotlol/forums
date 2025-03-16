@@ -104,7 +104,7 @@ db.run(`CREATE TABLE IF NOT EXISTS reports (
 // db.run("INSERT INTO categories (name, description) VALUES ('Show and Tell', 'Show off your creations here!')", (err) => { if (err) { console.error(err.message); } });
 db.get("SELECT COUNT(*) FROM categories", (err, count) => {
   if (!err && count["COUNT(*)"] < 7) {
-    db.run("INSERT INTO categories (name, description) VALUES ('Garbage Dump', 'Where posts go when they die')", (err) => { if (err) { console.error(err.message); } });
+    db.run("INSERT INTO categories (name, description) VALUES ('Garbage Dump', 'Where posts go when they die.')", (err) => { if (err) { console.error(err.message); } });
   }
 });
 
