@@ -19,13 +19,19 @@
     <p>In <%= category.name %>. <%= category.description %></p>
     <div id="new_post" class="block post_form">
         <input type="text" id="new_post_title" placeholder="Topic title" autocomplete="off">
-        <textarea id="new_post_content"></textarea>
+        <div id="new_post_content_container">
+            <textarea id="new_post_content"></textarea>
+            <div id="new_post_content_preview_container">
+                <div id="new_post_content_preview"></div>
+            </div>
+        </div>
         <a class="button" id="new_post_submit" href="#">Post topic</a>
     </div>
 </div>
 <div id="footercontainer"></div>
 <script src="https://dev.hatch.lol/navbar/navbar.js"></script>
 <script src="https://dev.hatch.lol/footer/footer.js"></script>
-<script src="/new_topic.js"></script>
+<script src="/glitter.js"></script>
+<script src="/new_topic.js" type="module"></script>
 </body>
 </html>

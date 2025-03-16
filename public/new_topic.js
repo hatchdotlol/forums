@@ -1,4 +1,13 @@
+import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+
 document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("#new_post_content").addEventListener("keyup", () => {
+        document.querySelector("#new_post_content_preview").innerHTML = glitter(marked.parse(document.querySelector("#new_post_content").value
+            .replace(/&/g, "&amp;")
+            .replace(/>/g, "&gt;")
+            .replace(/</g, "&lt;")));
+    });
+
     document.querySelector("#new_post_submit").addEventListener("click", () => {
         if (document.querySelector("#new_post_content").value.length > 8000) {
             alert("error: 8000-character content limit surpassed");
