@@ -1,4 +1,4 @@
-const version = "2.2.0";
+const version = "2.3.0";
 
 const express = require("express");
 const path = require("path");
@@ -24,7 +24,7 @@ const report_webhook = new Webhook(process.env.DISCORD_REPORT_WEBHOOK_URL).setUs
 
 const app = express();
 
-const port = parseInt(process.env.PORT) || process.argv[3] || 5500;
+const port = parseInt(process.env.PORT) || process.argv[3] || 8000;
 
 const db = new sqlite.Database("./db.db", (err) => {
   if (err) {
