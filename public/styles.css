@@ -152,3 +152,16 @@ h1, h2, h3, p {
 .post:target {
     outline: 2px solid var(--primary);
 }
+
+blockquote {
+    padding: 1rem;
+    padding-left: calc(1rem - 3px);
+    border-left: 3px solid var(--primary);
+    margin: 0;
+    background-color: #4b4b4b2d;
+    border-radius: 3px 10px 10px 3px;
+}
+
+.post-content p {
+    margin: 0 !important;
+}
