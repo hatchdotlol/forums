@@ -1,3 +1,5 @@
+import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+
 document.addEventListener("DOMContentLoaded", () => {
     Array.from(document.getElementsByClassName("post")).forEach(element => {
         fetch(`https://api.hatch.lol/users/${element.dataset.author}`).then(res => res.json()).then(data => {
@@ -7,9 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
     Array.from(document.getElementsByClassName("post-content")).forEach(element => {
-        element.innerHTML = element.innerHTML
-            .replace(/(https?:\/\/\S+)/g, "<a href='$1'>$1</a>")
-            .replace(/@([a-z,A-Z,0-9,-,_]+)\b/g, "<a href='https://dev.hatch.lol/user/?u=$1'>@$1</a>")
+        element.innerHTML = marked.parse(element.innerText
+            .replace(/&/g, "&amp;")
+            .replace(/>/g, "&gt;")
+            .replace(/</g, "&lt;"))
+            .replace(/@([a-z,A-Z,0-9,\-,_]+)\b/g, "<a href='https://dev.hatch.lol/user/?u=$1'>@$1</a>")
             .replace(/:glungus:/g, "<img class='emoji' src='https://dev.hatch.lol/images/emojis/glungus.png' alt='glungus'>")
             .replace(/:(tada|hooray):/g, "🎉")
             .replace(/:(\+1|thumbsup):/g, "👍")
