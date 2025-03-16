@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/:skull:/g, "💀")
             .replace(/:(hatch(dotlol)?|kyle):/g, "🐣")
             .replace(/\[quote=([a-z,A-Z,0-9,\-,_]+)\]/g, "<blockquote><p><b><a href='https://dev.hatch.lol/user/?u=$1'>@$1</a> said:</b></p>")
+            .replace(/\[quote\]/g, "<blockquote>")
             .replace(/\[\/quote\]/g, "</blockquote>")
     });
 
