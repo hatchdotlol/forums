@@ -217,6 +217,33 @@ app.get("/topic/:topic", (req, res) => {
   });
 });
 
+app.get("/search/:query", (req, res) => {
+  db.all("SELECT * FROM posts WHERE instr(content, ?) > 0", [req.params.query], async (err, posts) => {
+    console.log(err);
+    let get_reactions = (post) => new Promise((resolve) => {
+      db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
+        resolve(reactions);
+      });
+    });
+    let post_reactions = await Promise.all(posts.map(post => get_reactions(post)));
+
+    let get_post_counts = (post) => new Promise((resolve) => {
+      db.get("SELECT COUNT(*) FROM posts WHERE author = ?", [post.author], (err, count) => {
+        if (!err) {
+          resolve(count["COUNT(*)"]);
+        }
+      });
+    });
+    let post_count = await Promise.all(posts.map(post => get_post_counts(post)));
+
+    res.render("search", {
+      posts: posts,
+      reactions: post_reactions,
+      post_count: post_count
+    });
+  });
+});
+
 app.get("/report/:id", (req, res) => {
   db.get("SELECT * FROM posts WHERE id = ?", [req.params.id], async (err, post) => {
     if (post === undefined) {

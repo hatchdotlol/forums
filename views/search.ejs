@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/root.css">
+    <link rel="stylesheet" type="text/css" href="/styles.css">
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/style.css">
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/navbar/navbar.css">
+    <link rel="stylesheet" type="text/css" href="https://dev.hatch.lol/footer/footer.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Search Results | Hatch Forums</title>
+</head>
+<body>
+    <div id="navarea"></div>
+    <div id="main">
+        <h1>Search Results</h1>
+        <form>
+            <label for="forum_search"><h2>Search</h2></label><input type="text" id="forum_search" placeholder="Search for posts and topics">
+        </form>
+        <h2>Results</h2>
+		<div id="posts">
+            <% for (let i = 0; i < posts.length; i++) { %>
+                <div class="block post" id="<%= posts[i].id %>" data-author="<%= posts[i].author %>">
+                    <% let date = new Date(posts[i].timestamp); %>
+                    <div class="post-header">
+                        <span class="post-date"><%= ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date.getMonth()] %> <%= date.getDate() %> <%= date.getFullYear() %> <%= date.getHours() %>:<%= date.getMinutes().toString().length === 1 ? "0" : "" %><%= date.getMinutes() %>:<%= date.getSeconds().toString().length === 1 ? "0" : "" %><%= date.getSeconds() %></span>
+                        <a class="post-action-button" title="Report" href="/report/<%= posts[i].id %>">🚩</a>
+                        <a class="post-action-button post-deletion-button" title="Delete" href="/admin/delete/post/<%= posts[i].id %>">Delete</a>
+                        <a class="post-action-button" title="Go to post" href="/topic/<%= posts[i].topic %>">Go to topic</a>
+                    </div>
+                    <div class="post-stuff">
+                        <section>
+                            <div class="post-user-info">
+                                <img class="post-pfp" src="https://api.hatch.lol/uploads/pfp/default.png">
+                                <a class="post-user-name" href="https://dev.hatch.lol/user/?u=<%= posts[i].author %>"></a>
+                                <div class="post-user-role"></div>
+                                <div class="post-user-post-count"><%= post_count[i] %> posts</div>
+                            </div>
+                        </section>
+                        <div class="post-content-container">
+                            <div class="post-content">
+                                <% if (posts[i].content.includes("\n")) { %>
+                                    <% let paragraphs = posts[i].content.split(/\r?\n/) %>
+                                    <% for (let j = 0; j < paragraphs.length; j++) { %>
+                                        <%= paragraphs[j] %><br>
+                                    <% } %>
+                                <% } else { %>
+                                    <%= posts[i].content %>
+                                <% } %> 
+                            </div>
+                        </div>
+                        <section>
+                            <div class="post-reactions">
+                                <% let post_reactions = [ [], [], [], [], [] ]; %>
+                                <% for (let j = 0; j < reactions[i].length; j++) { %>
+                                    <% post_reactions[reactions[i][j].type].push(reactions[i][j].author); %>
+                                <% } %>
+        
+                                <% for (let j = 0; j < 5; j++) { %>
+                                    <a class="button post-reaction-button" data-post="<%= posts[i].id %>" data-reaction="<%= j %>" title="<%= post_reactions[j].join(", ") %>"><%= ["🎉", "👍", "👎", "❓", "️‍🔥"][j] %> <span class="post-reaction-counter"><%= post_reactions[j].length > 0 ? post_reactions[j].length : "" %></span></a>
+                                <% } %>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <div id="footercontainer"></div>
+    <script src="https://dev.hatch.lol/navbar/navbar.js"></script>
+    <script src="https://dev.hatch.lol/footer/footer.js"></script>
+	<script src="/search_bar.js"></script>
+    <script src="/topic.js" type="module"></script>
+    <script src="/glitter.js"></script>
+</body>
+</html>

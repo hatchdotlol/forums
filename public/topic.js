@@ -1,12 +1,14 @@
 import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelector("#new_post_content").addEventListener("keyup", () => {
-        document.querySelector("#new_post_content_preview").innerHTML = glitter(marked.parse(document.querySelector("#new_post_content").value
-            .replace(/&/g, "&amp;")
-            .replace(/>/g, "&gt;")
-            .replace(/</g, "&lt;")));
-    });
+    if (document.querySelector("#new_post_content")) {
+        document.querySelector("#new_post_content").addEventListener("keyup", () => {
+            document.querySelector("#new_post_content_preview").innerHTML = glitter(marked.parse(document.querySelector("#new_post_content").value
+                .replace(/&/g, "&amp;")
+                .replace(/>/g, "&gt;")
+                .replace(/</g, "&lt;")));
+        });
+    }
 
     Array.from(document.getElementsByClassName("post")).forEach(element => {
         fetch(`https://api.hatch.lol/users/${element.dataset.author}`).then(res => res.json()).then(data => {
@@ -65,18 +67,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     mod_actions_bar.remove();
                     Array.from(post_deletion_buttons).forEach(button => button.remove());
                 } else {
-                    document.querySelector("#pin-topic-button").addEventListener("click", () => {
-                        fetch("/api/pin/topic", {
-                            method: "POST",
-                            headers: {
-                                "Content-type": "application/json",
-                                "Token": localStorage.getItem("token")
-                            },
-                            body: JSON.stringify({
-                                "id": document.querySelector("#get-topic").content
-                            })
+                    if (document.querySelector("#pin-topic-button")) {
+                        document.querySelector("#pin-topic-button").addEventListener("click", () => {
+                            fetch("/api/pin/topic", {
+                                method: "POST",
+                                headers: {
+                                    "Content-type": "application/json",
+                                    "Token": localStorage.getItem("token")
+                                },
+                                body: JSON.stringify({
+                                    "id": document.querySelector("#get-topic").content
+                                })
+                            });
                         });
-                    });
+                    }
                 }
             });
         } else {

@@ -127,7 +127,8 @@ input::placeholder {
     cursor: pointer;
 }
 
-#new_post_title {
+#new_post_title,
+#forum_search {
     width: calc(100% - 20px);
     font-family: inherit;
     font-size: inherit;
@@ -199,4 +200,12 @@ blockquote {
 
 #new_post_content_preview {
     height: 0;
+}
+
+label h2 {
+    cursor: auto;
+}
+
+#forum_search {
+    background-color: var(--innerBlock);
 }

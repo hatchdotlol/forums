@@ -15,6 +15,10 @@
     <div id="navarea"></div>
     <div id="main">
         <h1>Hatch Forums <a href="https://github.com/hatchdotlol/forums/releases/tag/<%= version %>" class="forum-version"><%= version %></a></h1>
+        <form>
+            <label for="forum_search"><h2>Search</h2></label><input type="text" id="forum_search" placeholder="Search for posts and topics">
+        </form>
+        <h2>Categories</h2>
         <a class="block" href="/category/1">Announcements</a>
         <a class="block" href="/category/2">Suggestions</a>
         <a class="block" href="/category/3">Questions about Hatch</a>
@@ -25,5 +29,6 @@
     <div id="footercontainer"></div>
     <script src="https://dev.hatch.lol/navbar/navbar.js"></script>
     <script src="https://dev.hatch.lol/footer/footer.js"></script>
+    <script src="/search_bar.js"></script>
 </body>
 </html>
