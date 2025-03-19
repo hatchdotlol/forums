@@ -209,3 +209,7 @@ label h2 {
 #forum_search {
     background-color: var(--innerBlock);
 }
+
+img {
+    max-width: 100%;
+}
