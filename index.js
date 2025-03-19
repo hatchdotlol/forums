@@ -219,7 +219,6 @@ app.get("/topic/:topic", (req, res) => {
 
 app.get("/search/:query", (req, res) => {
   db.all("SELECT * FROM posts WHERE instr(content, ?) > 0", [req.params.query], async (err, posts) => {
-    console.log(err);
     let get_reactions = (post) => new Promise((resolve) => {
       db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
         resolve(reactions);
