@@ -218,7 +218,18 @@ app.get("/topic/:topic", (req, res) => {
 });
 
 app.get("/search/:query", (req, res) => {
-  db.all("SELECT * FROM posts WHERE instr(content, ?) > 0", [req.params.query], async (err, posts) => {
+  db.all("SELECT * FROM posts WHERE instr(content, ?) > 0", [req.params.query], async (err, results) => {
+    let get_posts = (post) => new Promise((resolve) => {
+      db.get("SELECT * FROM topics WHERE id = ?", [post.topic], function(err, topic) {
+        if (topic.category === 7) {
+          resolve(null);
+        } else {
+          resolve(post);
+        }
+      });
+    });
+    let posts = (await Promise.all(results.map(post => get_posts(post)))).filter(post => post);
+
     let get_reactions = (post) => new Promise((resolve) => {
       db.all("SELECT * FROM reactions WHERE post = ?", [post.id], function(err, reactions) {
         resolve(reactions);
@@ -780,7 +791,7 @@ app.post("/api/delete/topic", (req, res) => {
           res.sendStatus(403);
           return;
         }
-        db.run("UPDATE topics SET category = 7 WHERE id = ?", [req.body.topic], (err) => { if (err) { res.sendStatus(500); return; } else { res.sendStatus(200); } });
+        db.run("UPDATE topics SET category = 7 WHERE id = ?", [req.body.topic], (err) => { if (err) { res.sendStatus(500); return; } });
       });
     } else {
       res.sendStatus(401);
